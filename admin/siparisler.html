@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sipariş Yönetimi - Fırın Pastane Admin</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="admin-panel">
+    <header class="admin-header">
+        <nav class="admin-nav">
+            <div class="nav-logo">
+                <i class="fas fa-bread-slice"></i>
+                <span>Fırın Pastane Admin</span>
+            </div>
+            <div class="admin-nav-right">
+                <button id="sidebarToggle" class="btn btn-outline">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <span class="admin-user">Admin User</span>
+                <button id="logoutBtn" class="btn btn-outline">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <nav>
+                <ul>
+                    <li>
+                        <a href="dashboard.html">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="urunler.html">
+                            <i class="fas fa-boxes"></i>
+                            Ürün Yönetimi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="siparisler.html" class="active">
+                            <i class="fas fa-shopping-cart"></i>
+                            Sipariş Yönetimi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="musteriler.html">
+                            <i class="fas fa-users"></i>
+                            Müşteri Yönetimi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="raporlar.html">
+                            <i class="fas fa-chart-bar"></i>
+                            Raporlar
+                        </a>
+                    </li>
+                    <li>
+                        <hr style="border-color: var(--border-light); margin: 1rem 0;">
+                    </li>
+                    <li>
+                        <a href="../index.html">
+                            <i class="fas fa-home"></i>
+                            Ana Siteye Dön
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="admin-content">
+            <div class="breadcrumb">
+                <span class="breadcrumb-item">Admin</span>
+                <span class="breadcrumb-item">Sipariş Yönetimi</span>
+            </div>
+
+            <div class="page-header">
+                <h1>Sipariş Yönetimi</h1>
+                <button id="addOrderBtn" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Yeni Sipariş Ekle
+                </button>
+            </div>
+
+            <!-- Order Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock" style="color: var(--accent-orange);"></i>
+                    </div>
+                    <div class="stat-number" id="pending-orders">0</div>
+                    <div class="stat-label">Bekleyen Siparişler</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-cog" style="color: var(--secondary-gold);"></i>
+                    </div>
+                    <div class="stat-number" id="preparing-orders">0</div>
+                    <div class="stat-label">Hazırlananlar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check" style="color: #28a745;"></i>
+                    </div>
+                    <div class="stat-number" id="ready-orders">0</div>
+                    <div class="stat-label">Hazır Olanlar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-truck" style="color: var(--primary-brown);"></i>
+                    </div>
+                    <div class="stat-number" id="delivered-orders">0</div>
+                    <div class="stat-label">Teslim Edilenler</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters" style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                <div class="search-box" style="flex: 1; min-width: 250px;">
+                    <input type="text" id="searchInput" placeholder="Sipariş ara..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px;">
+                </div>
+                <select id="statusFilter" style="padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px;">
+                    <option value="all">Tüm Durumlar</option>
+                    <option value="pending">Beklemede</option>
+                    <option value="preparing">Hazırlanıyor</option>
+                    <option value="ready">Hazır</option>
+                    <option value="delivered">Teslim Edildi</option>
+                    <option value="cancelled">İptal Edildi</option>
+                </select>
+                <input type="date" id="dateFilter" style="padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px;">
+            </div>
+
+            <!-- Orders Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Sipariş Listesi</h2>
+                </div>
+                <div id="ordersTable">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Sipariş ID</th>
+                                <th>Müşteri</th>
+                                <th>Ürünler</th>
+                                <th>Toplam</th>
+                                <th>Durum</th>
+                                <th>Tarih</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- Orders will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Sipariş Detayları</h2>
+            <div id="orderDetails">
+                <!-- Order details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Order Modal -->
+    <div id="addOrderModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close">&times;</span>
+            <h2>Yeni Sipariş Ekle</h2>
+            <form id="orderForm">
+                <div class="form-group">
+                    <label for="customerName">Müşteri Adı:</label>
+                    <input type="text" id="customerName" name="customerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">Telefon:</label>
+                    <input type="tel" id="customerPhone" name="customerPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerAddress">Adres:</label>
+                    <textarea id="customerAddress" name="customerAddress" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Ürünler:</label>
+                    <div id="orderItems">
+                        <div class="order-item">
+                            <select class="product-select" name="products[]" required>
+                                <option value="">Ürün Seçin</option>
+                                <!-- Products will be loaded here -->
+                            </select>
+                            <input type="number" class="quantity-input" name="quantities[]" min="1" value="1" required>
+                            <button type="button" class="btn btn-small btn-danger remove-item">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" id="addItemBtn" class="btn btn-outline">
+                        <i class="fas fa-plus"></i>
+                        Ürün Ekle
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label for="orderNotes">Notlar:</label>
+                    <textarea id="orderNotes" name="notes" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Toplam: <span id="orderTotal">0.00 TL</span></label>
+                </div>
+                <div class="form-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-outline" id="cancelOrderBtn">İptal</button>
+                    <button type="submit" class="btn btn-primary">Sipariş Oluştur</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        class OrderManager {
+            constructor() {
+                this.orders = [];
+                this.products = [];
+                this.init();
+            }
+
+            init() {
+                this.loadData();
+                this.bindEvents();
+                this.renderOrders();
+                this.updateStats();
+            }
+
+            loadData() {
+                const data = JSON.parse(localStorage.getItem('firinData'));
+                if (data) {
+                    this.orders = data.orders || [];
+                    this.products = Object.values(data.products || {}).flat();
+                }
+
+                // Add sample orders if none exist
+                if (this.orders.length === 0) {
+                    this.orders = [
+                        {
+                            id: 1,
+                            customerName: 'Ahmet Yılmaz',
+                            customerPhone: '0532 123 45 67',
+                            customerAddress: 'Kadıköy, İstanbul',
+                            items: [
+                                { productId: 1, name: 'Beyaz Ekmek', quantity: 2, price: 3.50 },
+                                { productId: 5, name: 'İstanbul Simidi', quantity: 3, price: 2.50 }
+                            ],
+                            total: 14.50,
+                            status: 'pending',
+                            date: Date.now() - 3600000,
+                            notes: 'Sabah erken teslimat'
+                        },
+                        {
+                            id: 2,
+                            customerName: 'Fatma Özkan',
+                            customerPhone: '0533 987 65 43',
+                            customerAddress: 'Beşiktaş, İstanbul',
+                            items: [
+                                { productId: 9, name: 'Doğum Günü Pastası', quantity: 1, price: 45.00 }
+                            ],
+                            total: 45.00,
+                            status: 'preparing',
+                            date: Date.now() - 1800000,
+                            notes: 'Çikolatalı olsun'
+                        }
+                    ];
+                    this.saveOrders();
+                }
+            }
+
+            saveOrders() {
+                const data = JSON.parse(localStorage.getItem('firinData'));
+                data.orders = this.orders;
+                localStorage.setItem('firinData', JSON.stringify(data));
+            }
+
+            bindEvents() {
+                // Add order button
+                document.getElementById('addOrderBtn').addEventListener('click', () => {
+                    this.showAddOrderModal();
+                });
+
+                // Search and filters
+                document.getElementById('searchInput').addEventListener('input', () => {
+                    this.renderOrders();
+                });
+
+                document.getElementById('statusFilter').addEventListener('change', () => {
+                    this.renderOrders();
+                });
+
+                document.getElementById('dateFilter').addEventListener('change', () => {
+                    this.renderOrders();
+                });
+
+                // Modal events
+                this.bindModalEvents();
+            }
+
+            bindModalEvents() {
+                // Order details modal
+                const orderModal = document.getElementById('orderModal');
+                const addOrderModal = document.getElementById('addOrderModal');
+                
+                // Close buttons
+                document.querySelectorAll('.close').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.target.closest('.modal').style.display = 'none';
+                    });
+                });
+
+                // Cancel buttons
+                document.getElementById('cancelOrderBtn').addEventListener('click', () => {
+                    addOrderModal.style.display = 'none';
+                });
+
+                // Window click to close
+                window.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('modal')) {
+                        e.target.style.display = 'none';
+                    }
+                });
+
+                // Add order form
+                document.getElementById('orderForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveOrder();
+                });
+
+                // Add item button
+                document.getElementById('addItemBtn').addEventListener('click', () => {
+                    this.addOrderItem();
+                });
+            }
+
+            renderOrders() {
+                const tbody = document.getElementById('ordersTableBody');
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const statusFilter = document.getElementById('statusFilter').value;
+                const dateFilter = document.getElementById('dateFilter').value;
+
+                let filteredOrders = this.orders;
+
+                // Filter by search term
+                if (searchTerm) {
+                    filteredOrders = filteredOrders.filter(order => 
+                        order.customerName.toLowerCase().includes(searchTerm) ||
+                        order.id.toString().includes(searchTerm)
+                    );
+                }
+
+                // Filter by status
+                if (statusFilter !== 'all') {
+                    filteredOrders = filteredOrders.filter(order => order.status === statusFilter);
+                }
+
+                // Filter by date
+                if (dateFilter) {
+                    const filterDate = new Date(dateFilter).toDateString();
+                    filteredOrders = filteredOrders.filter(order => 
+                        new Date(order.date).toDateString() === filterDate
+                    );
+                }
+
+                tbody.innerHTML = filteredOrders.map(order => `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>
+                            <div>
+                                <strong>${order.customerName}</strong><br>
+                                <small>${order.customerPhone}</small>
+                            </div>
+                        </td>
+                        <td>
+                            <small>${order.items.map(item => `${item.name} (${item.quantity})`).join(', ')}</small>
+                        </td>
+                        <td>${order.total.toFixed(2)} TL</td>
+                        <td>${this.getStatusBadge(order.status)}</td>
+                        <td>${this.formatDate(order.date)}</td>
+                        <td>
+                            <button class="btn btn-small btn-primary" onclick="orderManager.viewOrder(${order.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-small btn-warning" onclick="orderManager.updateStatus(${order.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            ${order.status === 'pending' ? `
+                                <button class="btn btn-small btn-danger" onclick="orderManager.cancelOrder(${order.id})">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            getStatusBadge(status) {
+                const statusMap = {
+                    'pending': { text: 'Beklemede', class: 'warning' },
+                    'preparing': { text: 'Hazırlanıyor', class: 'info' },
+                    'ready': { text: 'Hazır', class: 'success' },
+                    'delivered': { text: 'Teslim Edildi', class: 'primary' },
+                    'cancelled': { text: 'İptal Edildi', class: 'danger' }
+                };
+                const statusInfo = statusMap[status] || { text: 'Bilinmiyor', class: 'secondary' };
+                return `<span class="badge badge-${statusInfo.class}" style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; color: white; background: var(--${statusInfo.class === 'warning' ? 'accent-orange' : statusInfo.class === 'success' ? 'secondary-gold' : 'primary-brown'});">${statusInfo.text}</span>`;
+            }
+
+            formatDate(timestamp) {
+                return new Date(timestamp).toLocaleDateString('tr-TR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+
+            updateStats() {
+                const stats = {
+                    pending: this.orders.filter(o => o.status === 'pending').length,
+                    preparing: this.orders.filter(o => o.status === 'preparing').length,
+                    ready: this.orders.filter(o => o.status === 'ready').length,
+                    delivered: this.orders.filter(o => o.status === 'delivered').length
+                };
+
+                Object.keys(stats).forEach(status => {
+                    const element = document.getElementById(`${status}-orders`);
+                    if (element) {
+                        element.textContent = stats[status];
+                    }
+                });
+            }
+
+            viewOrder(id) {
+                const order = this.orders.find(o => o.id === id);
+                if (!order) return;
+
+                const modal = document.getElementById('orderModal');
+                const details = document.getElementById('orderDetails');
+
+                details.innerHTML = `
+                    <div class="order-info">
+                        <h3>Sipariş #${order.id}</h3>
+                        <p><strong>Durum:</strong> ${this.getStatusBadge(order.status)}</p>
+                        <p><strong>Tarih:</strong> ${this.formatDate(order.date)}</p>
+                        
+                        <h4>Müşteri Bilgileri</h4>
+                        <p><strong>Ad:</strong> ${order.customerName}</p>
+                        <p><strong>Telefon:</strong> ${order.customerPhone}</p>
+                        <p><strong>Adres:</strong> ${order.customerAddress || '-'}</p>
+                        
+                        <h4>Sipariş Detayları</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Ürün</th>
+                                    <th>Miktar</th>
+                                    <th>Fiyat</th>
+                                    <th>Toplam</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${order.items.map(item => `
+                                    <tr>
+                                        <td>${item.name}</td>
+                                        <td>${item.quantity}</td>
+                                        <td>${item.price.toFixed(2)} TL</td>
+                                        <td>${(item.price * item.quantity).toFixed(2)} TL</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3"><strong>Toplam</strong></td>
+                                    <td><strong>${order.total.toFixed(2)} TL</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        
+                        ${order.notes ? `<p><strong>Notlar:</strong> ${order.notes}</p>` : ''}
+                    </div>
+                `;
+
+                modal.style.display = 'block';
+            }
+
+            updateStatus(id) {
+                const order = this.orders.find(o => o.id === id);
+                if (!order) return;
+
+                const statusOptions = {
+                    'pending': 'preparing',
+                    'preparing': 'ready',
+                    'ready': 'delivered'
+                };
+
+                const nextStatus = statusOptions[order.status];
+                if (nextStatus) {
+                    order.status = nextStatus;
+                    this.saveOrders();
+                    this.renderOrders();
+                    this.updateStats();
+                    this.showNotification('Sipariş durumu güncellendi!', 'success');
+                }
+            }
+
+            cancelOrder(id) {
+                if (confirm('Bu siparişi iptal etmek istediğinizden emin misiniz?')) {
+                    const order = this.orders.find(o => o.id === id);
+                    if (order) {
+                        order.status = 'cancelled';
+                        this.saveOrders();
+                        this.renderOrders();
+                        this.updateStats();
+                        this.showNotification('Sipariş iptal edildi!', 'success');
+                    }
+                }
+            }
+
+            showAddOrderModal() {
+                const modal = document.getElementById('addOrderModal');
+                this.loadProductOptions();
+                modal.style.display = 'block';
+            }
+
+            loadProductOptions() {
+                const selects = document.querySelectorAll('.product-select');
+                const options = this.products.map(product => 
+                    `<option value="${product.id}" data-price="${product.price}">${product.name} - ${product.price.toFixed(2)} TL</option>`
+                ).join('');
+
+                selects.forEach(select => {
+                    select.innerHTML = '<option value="">Ürün Seçin</option>' + options;
+                });
+            }
+
+            addOrderItem() {
+                const container = document.getElementById('orderItems');
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'order-item';
+                itemDiv.style.cssText = 'display: flex; gap: 0.5rem; margin: 0.5rem 0; align-items: center;';
+                
+                itemDiv.innerHTML = `
+                    <select class="product-select" name="products[]" required style="flex: 1; padding: 0.5rem;">
+                        <option value="">Ürün Seçin</option>
+                        ${this.products.map(product => 
+                            `<option value="${product.id}" data-price="${product.price}">${product.name} - ${product.price.toFixed(2)} TL</option>`
+                        ).join('')}
+                    </select>
+                    <input type="number" class="quantity-input" name="quantities[]" min="1" value="1" required style="width: 80px; padding: 0.5rem;">
+                    <button type="button" class="btn btn-small btn-danger remove-item">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+
+                container.appendChild(itemDiv);
+
+                // Bind remove event
+                itemDiv.querySelector('.remove-item').addEventListener('click', () => {
+                    container.removeChild(itemDiv);
+                    this.calculateTotal();
+                });
+
+                // Bind change events
+                itemDiv.querySelector('.product-select').addEventListener('change', () => {
+                    this.calculateTotal();
+                });
+
+                itemDiv.querySelector('.quantity-input').addEventListener('input', () => {
+                    this.calculateTotal();
+                });
+            }
+
+            calculateTotal() {
+                let total = 0;
+                const items = document.querySelectorAll('.order-item');
+                
+                items.forEach(item => {
+                    const select = item.querySelector('.product-select');
+                    const quantity = parseInt(item.querySelector('.quantity-input').value) || 0;
+                    const price = parseFloat(select.selectedOptions[0]?.dataset.price || 0);
+                    total += price * quantity;
+                });
+
+                document.getElementById('orderTotal').textContent = `${total.toFixed(2)} TL`;
+            }
+
+            saveOrder() {
+                const form = document.getElementById('orderForm');
+                const formData = new FormData(form);
+                
+                const products = formData.getAll('products[]');
+                const quantities = formData.getAll('quantities[]');
+                
+                const items = [];
+                let total = 0;
+
+                products.forEach((productId, index) => {
+                    if (productId) {
+                        const product = this.products.find(p => p.id == productId);
+                        const quantity = parseInt(quantities[index]);
+                        if (product && quantity > 0) {
+                            items.push({
+                                productId: product.id,
+                                name: product.name,
+                                quantity: quantity,
+                                price: product.price
+                            });
+                            total += product.price * quantity;
+                        }
+                    }
+                });
+
+                if (items.length === 0) {
+                    this.showNotification('En az bir ürün seçmelisiniz!', 'error');
+                    return;
+                }
+
+                const order = {
+                    id: Date.now(),
+                    customerName: formData.get('customerName'),
+                    customerPhone: formData.get('customerPhone'),
+                    customerAddress: formData.get('customerAddress'),
+                    items: items,
+                    total: total,
+                    status: 'pending',
+                    date: Date.now(),
+                    notes: formData.get('notes')
+                };
+
+                this.orders.push(order);
+                this.saveOrders();
+                this.renderOrders();
+                this.updateStats();
+
+                document.getElementById('addOrderModal').style.display = 'none';
+                form.reset();
+                this.showNotification('Yeni sipariş başarıyla oluşturuldu!', 'success');
+            }
+
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 2rem;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 600;
+                    z-index: 10000;
+                    animation: slideIn 0.3s ease;
+                `;
+                
+                switch (type) {
+                    case 'success':
+                        notification.style.backgroundColor = '#28a745';
+                        break;
+                    case 'error':
+                        notification.style.backgroundColor = '#dc3545';
+                        break;
+                    default:
+                        notification.style.backgroundColor = '#17a2b8';
+                }
+                
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 3000);
+            }
+        }
+
+        // Initialize order manager
+        let orderManager;
+        document.addEventListener('DOMContentLoaded', () => {
+            orderManager = new OrderManager();
+        });
+    </script>
+</body>
+</html>

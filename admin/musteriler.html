@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Müşteri Yönetimi - Fırın Pastane Admin</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="admin-panel">
+    <header class="admin-header">
+        <nav class="admin-nav">
+            <div class="nav-logo">
+                <i class="fas fa-bread-slice"></i>
+                <span>Fırın Pastane Admin</span>
+            </div>
+            <div class="admin-nav-right">
+                <button id="sidebarToggle" class="btn btn-outline">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <span class="admin-user">Admin User</span>
+                <button id="logoutBtn" class="btn btn-outline">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <nav>
+                <ul>
+                    <li>
+                        <a href="dashboard.html">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="urunler.html">
+                            <i class="fas fa-boxes"></i>
+                            Ürün Yönetimi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="siparisler.html">
+                            <i class="fas fa-shopping-cart"></i>
+                            Sipariş Yönetimi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="musteriler.html" class="active">
+                            <i class="fas fa-users"></i>
+                            Müşteri Yönetimi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="raporlar.html">
+                            <i class="fas fa-chart-bar"></i>
+                            Raporlar
+                        </a>
+                    </li>
+                    <li>
+                        <hr style="border-color: var(--border-light); margin: 1rem 0;">
+                    </li>
+                    <li>
+                        <a href="../index.html">
+                            <i class="fas fa-home"></i>
+                            Ana Siteye Dön
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="admin-content">
+            <div class="breadcrumb">
+                <span class="breadcrumb-item">Admin</span>
+                <span class="breadcrumb-item">Müşteri Yönetimi</span>
+            </div>
+
+            <div class="page-header">
+                <h1>Müşteri Yönetimi</h1>
+                <button id="addCustomerBtn" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Yeni Müşteri Ekle
+                </button>
+            </div>
+
+            <!-- Customer Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users" style="color: var(--primary-brown);"></i>
+                    </div>
+                    <div class="stat-number" id="total-customers">0</div>
+                    <div class="stat-label">Toplam Müşteri</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-check" style="color: var(--secondary-gold);"></i>
+                    </div>
+                    <div class="stat-number" id="active-customers">0</div>
+                    <div class="stat-label">Aktif Müşteri</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-star" style="color: var(--accent-orange);"></i>
+                    </div>
+                    <div class="stat-number" id="vip-customers">0</div>
+                    <div class="stat-label">VIP Müşteri</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-plus" style="color: #28a745;"></i>
+                    </div>
+                    <div class="stat-number" id="new-customers">0</div>
+                    <div class="stat-label">Bu Ay Yeni</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters" style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                <div class="search-box" style="flex: 1; min-width: 250px;">
+                    <input type="text" id="searchInput" placeholder="Müşteri ara..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px;">
+                </div>
+                <select id="statusFilter" style="padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px;">
+                    <option value="all">Tüm Müşteriler</option>
+                    <option value="active">Aktif</option>
+                    <option value="inactive">Pasif</option>
+                    <option value="vip">VIP</option>
+                </select>
+            </div>
+
+            <!-- Customers Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Müşteri Listesi</h2>
+                </div>
+                <div id="customersTable">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Ad Soyad</th>
+                                <th>Telefon</th>
+                                <th>Email</th>
+                                <th>Toplam Sipariş</th>
+                                <th>Toplam Harcama</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTableBody">
+                            <!-- Customers will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Customer Details Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Müşteri Detayları</h2>
+            <div id="customerDetails">
+                <!-- Customer details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Customer Modal -->
+    <div id="addCustomerModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close">&times;</span>
+            <h2 id="addModalTitle">Yeni Müşteri Ekle</h2>
+            <form id="customerForm">
+                <div class="form-group">
+                    <label for="customerName">Ad Soyad:</label>
+                    <input type="text" id="customerName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">Telefon:</label>
+                    <input type="tel" id="customerPhone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerEmail">Email:</label>
+                    <input type="email" id="customerEmail" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="customerAddress">Adres:</label>
+                    <textarea id="customerAddress" name="address" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="customerNotes">Notlar:</label>
+                    <textarea id="customerNotes" name="notes" rows="2"></textarea>
+                </div>
+                <div class="form-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-outline" id="cancelCustomerBtn">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        class CustomerManager {
+            constructor() {
+                this.customers = [];
+                this.orders = [];
+                this.editingCustomer = null;
+                this.init();
+            }
+
+            init() {
+                this.loadData();
+                this.bindEvents();
+                this.renderCustomers();
+                this.updateStats();
+            }
+
+            loadData() {
+                const data = JSON.parse(localStorage.getItem('firinData'));
+                if (data) {
+                    this.customers = data.customers || [];
+                    this.orders = data.orders || [];
+                }
+
+                // Add sample customers if none exist
+                if (this.customers.length === 0) {
+                    this.customers = [
+                        {
+                            id: 1,
+                            name: 'Ahmet Yılmaz',
+                            phone: '0532 123 45 67',
+                            email: 'ahmet@email.com',
+                            address: 'Kadıköy, İstanbul',
+                            registrationDate: Date.now() - 86400000 * 30,
+                            totalOrders: 5,
+                            totalSpent: 127.50,
+                            status: 'active',
+                            vip: false,
+                            notes: 'Düzenli müşteri'
+                        },
+                        {
+                            id: 2,
+                            name: 'Fatma Özkan',
+                            phone: '0533 987 65 43',
+                            email: 'fatma@email.com',
+                            address: 'Beşiktaş, İstanbul',
+                            registrationDate: Date.now() - 86400000 * 15,
+                            totalOrders: 12,
+                            totalSpent: 345.00,
+                            status: 'active',
+                            vip: true,
+                            notes: 'VIP müşteri - özel günlerde pasta siparişi veriyor'
+                        },
+                        {
+                            id: 3,
+                            name: 'Mehmet Demir',
+                            phone: '0534 555 66 77',
+                            email: 'mehmet@email.com',
+                            address: 'Şişli, İstanbul',
+                            registrationDate: Date.now() - 86400000 * 60,
+                            totalOrders: 3,
+                            totalSpent: 89.25,
+                            status: 'inactive',
+                            vip: false,
+                            notes: ''
+                        }
+                    ];
+                    this.saveCustomers();
+                }
+            }
+
+            saveCustomers() {
+                const data = JSON.parse(localStorage.getItem('firinData'));
+                data.customers = this.customers;
+                localStorage.setItem('firinData', JSON.stringify(data));
+            }
+
+            bindEvents() {
+                // Add customer button
+                document.getElementById('addCustomerBtn').addEventListener('click', () => {
+                    this.showAddCustomerModal();
+                });
+
+                // Search and filters
+                document.getElementById('searchInput').addEventListener('input', () => {
+                    this.renderCustomers();
+                });
+
+                document.getElementById('statusFilter').addEventListener('change', () => {
+                    this.renderCustomers();
+                });
+
+                // Modal events
+                this.bindModalEvents();
+            }
+
+            bindModalEvents() {
+                const customerModal = document.getElementById('customerModal');
+                const addCustomerModal = document.getElementById('addCustomerModal');
+                
+                // Close buttons
+                document.querySelectorAll('.close').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.target.closest('.modal').style.display = 'none';
+                    });
+                });
+
+                // Cancel button
+                document.getElementById('cancelCustomerBtn').addEventListener('click', () => {
+                    addCustomerModal.style.display = 'none';
+                });
+
+                // Window click to close
+                window.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('modal')) {
+                        e.target.style.display = 'none';
+                    }
+                });
+
+                // Customer form
+                document.getElementById('customerForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveCustomer();
+                });
+            }
+
+            renderCustomers() {
+                const tbody = document.getElementById('customersTableBody');
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const statusFilter = document.getElementById('statusFilter').value;
+
+                let filteredCustomers = this.customers;
+
+                // Filter by search term
+                if (searchTerm) {
+                    filteredCustomers = filteredCustomers.filter(customer => 
+                        customer.name.toLowerCase().includes(searchTerm) ||
+                        customer.phone.includes(searchTerm) ||
+                        customer.email.toLowerCase().includes(searchTerm)
+                    );
+                }
+
+                // Filter by status
+                if (statusFilter !== 'all') {
+                    if (statusFilter === 'vip') {
+                        filteredCustomers = filteredCustomers.filter(customer => customer.vip);
+                    } else {
+                        filteredCustomers = filteredCustomers.filter(customer => customer.status === statusFilter);
+                    }
+                }
+
+                tbody.innerHTML = filteredCustomers.map(customer => `
+                    <tr>
+                        <td>#${customer.id}</td>
+                        <td>
+                            <div>
+                                <strong>${customer.name}</strong>
+                                ${customer.vip ? '<span style="color: var(--secondary-gold); margin-left: 0.5rem;"><i class="fas fa-star"></i> VIP</span>' : ''}
+                            </div>
+                        </td>
+                        <td>${customer.phone}</td>
+                        <td>${customer.email || '-'}</td>
+                        <td>${customer.totalOrders}</td>
+                        <td>${customer.totalSpent.toFixed(2)} TL</td>
+                        <td>${this.getStatusBadge(customer.status)}</td>
+                        <td>
+                            <button class="btn btn-small btn-primary" onclick="customerManager.viewCustomer(${customer.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-small btn-warning" onclick="customerManager.editCustomer(${customer.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-small btn-danger" onclick="customerManager.deleteCustomer(${customer.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            getStatusBadge(status) {
+                const statusMap = {
+                    'active': { text: 'Aktif', color: '#28a745' },
+                    'inactive': { text: 'Pasif', color: '#6c757d' }
+                };
+                const statusInfo = statusMap[status] || { text: 'Bilinmiyor', color: '#6c757d' };
+                return `<span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; color: white; background: ${statusInfo.color};">${statusInfo.text}</span>`;
+            }
+
+            updateStats() {
+                const totalCustomers = this.customers.length;
+                const activeCustomers = this.customers.filter(c => c.status === 'active').length;
+                const vipCustomers = this.customers.filter(c => c.vip).length;
+                const thisMonth = Date.now() - (30 * 24 * 60 * 60 * 1000);
+                const newCustomers = this.customers.filter(c => c.registrationDate > thisMonth).length;
+
+                document.getElementById('total-customers').textContent = totalCustomers;
+                document.getElementById('active-customers').textContent = activeCustomers;
+                document.getElementById('vip-customers').textContent = vipCustomers;
+                document.getElementById('new-customers').textContent = newCustomers;
+            }
+
+            viewCustomer(id) {
+                const customer = this.customers.find(c => c.id === id);
+                if (!customer) return;
+
+                const customerOrders = this.orders.filter(o => 
+                    o.customerName === customer.name || o.customerPhone === customer.phone
+                );
+
+                const modal = document.getElementById('customerModal');
+                const details = document.getElementById('customerDetails');
+
+                details.innerHTML = `
+                    <div class="customer-info">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                            <div>
+                                <h3>${customer.name} ${customer.vip ? '<i class="fas fa-star" style="color: var(--secondary-gold);"></i>' : ''}</h3>
+                                <p><strong>Telefon:</strong> ${customer.phone}</p>
+                                <p><strong>Email:</strong> ${customer.email || '-'}</p>
+                                <p><strong>Adres:</strong> ${customer.address || '-'}</p>
+                                <p><strong>Kayıt Tarihi:</strong> ${this.formatDate(customer.registrationDate)}</p>
+                                <p><strong>Durum:</strong> ${this.getStatusBadge(customer.status)}</p>
+                                ${customer.notes ? `<p><strong>Notlar:</strong> ${customer.notes}</p>` : ''}
+                            </div>
+                            
+                            <div>
+                                <h4>İstatistikler</h4>
+                                <p><strong>Toplam Sipariş:</strong> ${customer.totalOrders}</p>
+                                <p><strong>Toplam Harcama:</strong> ${customer.totalSpent.toFixed(2)} TL</p>
+                                <p><strong>Ortalama Sipariş:</strong> ${customer.totalOrders > 0 ? (customer.totalSpent / customer.totalOrders).toFixed(2) : '0.00'} TL</p>
+                            </div>
+                        </div>
+                        
+                        <h4 style="margin-top: 2rem;">Sipariş Geçmişi</h4>
+                        ${customerOrders.length > 0 ? `
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Sipariş ID</th>
+                                        <th>Tarih</th>
+                                        <th>Toplam</th>
+                                        <th>Durum</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${customerOrders.slice(-10).map(order => `
+                                        <tr>
+                                            <td>#${order.id}</td>
+                                            <td>${this.formatDate(order.date)}</td>
+                                            <td>${order.total.toFixed(2)} TL</td>
+                                            <td>${order.status}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        ` : '<p>Henüz sipariş geçmişi bulunmuyor.</p>'}
+                    </div>
+                `;
+
+                modal.style.display = 'block';
+            }
+
+            showAddCustomerModal(customer = null) {
+                const modal = document.getElementById('addCustomerModal');
+                const modalTitle = document.getElementById('addModalTitle');
+                const form = document.getElementById('customerForm');
+
+                this.editingCustomer = customer;
+
+                if (customer) {
+                    modalTitle.textContent = 'Müşteri Düzenle';
+                    document.getElementById('customerName').value = customer.name;
+                    document.getElementById('customerPhone').value = customer.phone;
+                    document.getElementById('customerEmail').value = customer.email || '';
+                    document.getElementById('customerAddress').value = customer.address || '';
+                    document.getElementById('customerNotes').value = customer.notes || '';
+                } else {
+                    modalTitle.textContent = 'Yeni Müşteri Ekle';
+                    form.reset();
+                }
+
+                modal.style.display = 'block';
+            }
+
+            editCustomer(id) {
+                const customer = this.customers.find(c => c.id === id);
+                if (customer) {
+                    this.showAddCustomerModal(customer);
+                }
+            }
+
+            deleteCustomer(id) {
+                if (confirm('Bu müşteriyi silmek istediğinizden emin misiniz?')) {
+                    this.customers = this.customers.filter(c => c.id !== id);
+                    this.saveCustomers();
+                    this.renderCustomers();
+                    this.updateStats();
+                    this.showNotification('Müşteri başarıyla silindi!', 'success');
+                }
+            }
+
+            saveCustomer() {
+                const form = document.getElementById('customerForm');
+                const formData = new FormData(form);
+
+                const customerData = {
+                    name: formData.get('name'),
+                    phone: formData.get('phone'),
+                    email: formData.get('email'),
+                    address: formData.get('address'),
+                    notes: formData.get('notes')
+                };
+
+                if (this.editingCustomer) {
+                    // Update existing customer
+                    const index = this.customers.findIndex(c => c.id === this.editingCustomer.id);
+                    if (index !== -1) {
+                        this.customers[index] = { ...this.editingCustomer, ...customerData };
+                    }
+                } else {
+                    // Add new customer
+                    customerData.id = Date.now();
+                    customerData.registrationDate = Date.now();
+                    customerData.totalOrders = 0;
+                    customerData.totalSpent = 0;
+                    customerData.status = 'active';
+                    customerData.vip = false;
+                    this.customers.push(customerData);
+                }
+
+                this.saveCustomers();
+                this.renderCustomers();
+                this.updateStats();
+                document.getElementById('addCustomerModal').style.display = 'none';
+
+                this.showNotification(
+                    this.editingCustomer ? 'Müşteri başarıyla güncellendi!' : 'Yeni müşteri başarıyla eklendi!',
+                    'success'
+                );
+            }
+
+            formatDate(timestamp) {
+                return new Date(timestamp).toLocaleDateString('tr-TR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            }
+
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 2rem;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 600;
+                    z-index: 10000;
+                    animation: slideIn 0.3s ease;
+                `;
+                
+                switch (type) {
+                    case 'success':
+                        notification.style.backgroundColor = '#28a745';
+                        break;
+                    case 'error':
+                        notification.style.backgroundColor = '#dc3545';
+                        break;
+                    default:
+                        notification.style.backgroundColor = '#17a2b8';
+                }
+                
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 3000);
+            }
+        }
+
+        // Initialize customer manager
+        let customerManager;
+        document.addEventListener('DOMContentLoaded', () => {
+            customerManager = new CustomerManager();
+        });
+    </script>
+</body>
+</html>

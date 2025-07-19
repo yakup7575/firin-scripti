@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ürün Yönetimi - Fırın Pastane Admin</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="admin-panel">
+    <header class="admin-header">
+        <nav class="admin-nav">
+            <div class="nav-logo">
+                <i class="fas fa-bread-slice"></i>
+                <span>Fırın Pastane Admin</span>
+            </div>
+            <div class="admin-nav-right">
+                <button id="sidebarToggle" class="btn btn-outline">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <span class="admin-user">Admin User</span>
+                <button id="logoutBtn" class="btn btn-outline">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <nav>
+                <ul>
+                    <li>
+                        <a href="dashboard.html">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="urunler.html" class="active">
+                            <i class="fas fa-boxes"></i>
+                            Ürün Yönetimi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="siparisler.html">
+                            <i class="fas fa-shopping-cart"></i>
+                            Sipariş Yönetimi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="musteriler.html">
+                            <i class="fas fa-users"></i>
+                            Müşteri Yönetimi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="raporlar.html">
+                            <i class="fas fa-chart-bar"></i>
+                            Raporlar
+                        </a>
+                    </li>
+                    <li>
+                        <hr style="border-color: var(--border-light); margin: 1rem 0;">
+                    </li>
+                    <li>
+                        <a href="../index.html">
+                            <i class="fas fa-home"></i>
+                            Ana Siteye Dön
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="admin-content">
+            <div class="breadcrumb">
+                <span class="breadcrumb-item">Admin</span>
+                <span class="breadcrumb-item">Ürün Yönetimi</span>
+            </div>
+
+            <div class="page-header">
+                <h1>Ürün Yönetimi</h1>
+                <button id="addProductBtn" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Yeni Ürün Ekle
+                </button>
+            </div>
+
+            <!-- Category Tabs -->
+            <div class="category-tabs" style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-light);">
+                <button class="tab-btn active" data-category="all">
+                    <i class="fas fa-list"></i>
+                    Tümü
+                </button>
+                <button class="tab-btn" data-category="ekmek">
+                    <i class="fas fa-bread-slice"></i>
+                    Ekmek
+                </button>
+                <button class="tab-btn" data-category="simit">
+                    <i class="fas fa-circle-notch"></i>
+                    Simit
+                </button>
+                <button class="tab-btn" data-category="pasta">
+                    <i class="fas fa-birthday-cake"></i>
+                    Pasta
+                </button>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="filters" style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                <div class="search-box" style="flex: 1; min-width: 250px;">
+                    <input type="text" id="searchInput" placeholder="Ürün ara..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px;">
+                </div>
+                <select id="stockFilter" style="padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px;">
+                    <option value="all">Tüm Stok Durumu</option>
+                    <option value="instock">Stokta Var</option>
+                    <option value="lowstock">Düşük Stok</option>
+                    <option value="outofstock">Stokta Yok</option>
+                </select>
+            </div>
+
+            <!-- Products Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Ürün Listesi</h2>
+                </div>
+                <div id="productsTable">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Ürün Adı</th>
+                                <th>Kategori</th>
+                                <th>Fiyat</th>
+                                <th>Stok</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <!-- Products will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Yeni Ürün Ekle</h2>
+            <form id="productForm">
+                <div class="form-group">
+                    <label for="productName">Ürün Adı:</label>
+                    <input type="text" id="productName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Kategori:</label>
+                    <select id="productCategory" name="category" required>
+                        <option value="">Kategori Seçin</option>
+                        <option value="ekmek">Ekmek</option>
+                        <option value="simit">Simit</option>
+                        <option value="pasta">Pasta</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Fiyat (TL):</label>
+                    <input type="number" id="productPrice" name="price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="productStock">Stok Miktarı:</label>
+                    <input type="number" id="productStock" name="stock" required>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Açıklama:</label>
+                    <textarea id="productDescription" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-outline" id="cancelBtn">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        class ProductManager {
+            constructor() {
+                this.products = [];
+                this.currentCategory = 'all';
+                this.editingProduct = null;
+                this.init();
+            }
+
+            init() {
+                this.loadProducts();
+                this.bindEvents();
+                this.renderProducts();
+            }
+
+            loadProducts() {
+                const data = JSON.parse(localStorage.getItem('firinData'));
+                if (data && data.products) {
+                    this.products = Object.values(data.products).flat();
+                }
+            }
+
+            saveProducts() {
+                const data = JSON.parse(localStorage.getItem('firinData'));
+                const groupedProducts = {
+                    ekmek: [],
+                    simit: [],
+                    pasta: []
+                };
+
+                this.products.forEach(product => {
+                    if (groupedProducts[product.category]) {
+                        groupedProducts[product.category].push(product);
+                    }
+                });
+
+                data.products = groupedProducts;
+                localStorage.setItem('firinData', JSON.stringify(data));
+            }
+
+            bindEvents() {
+                // Tab buttons
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.currentCategory = btn.dataset.category;
+                        this.renderProducts();
+                    });
+                });
+
+                // Add product button
+                document.getElementById('addProductBtn').addEventListener('click', () => {
+                    this.showProductModal();
+                });
+
+                // Search input
+                document.getElementById('searchInput').addEventListener('input', () => {
+                    this.renderProducts();
+                });
+
+                // Stock filter
+                document.getElementById('stockFilter').addEventListener('change', () => {
+                    this.renderProducts();
+                });
+
+                // Modal events
+                const modal = document.getElementById('productModal');
+                const closeBtn = modal.querySelector('.close');
+                const cancelBtn = document.getElementById('cancelBtn');
+                const form = document.getElementById('productForm');
+
+                closeBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+
+                cancelBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+
+                window.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveProduct();
+                });
+            }
+
+            renderProducts() {
+                const tbody = document.getElementById('productsTableBody');
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const stockFilter = document.getElementById('stockFilter').value;
+
+                let filteredProducts = this.products;
+
+                // Filter by category
+                if (this.currentCategory !== 'all') {
+                    filteredProducts = filteredProducts.filter(p => p.category === this.currentCategory);
+                }
+
+                // Filter by search term
+                if (searchTerm) {
+                    filteredProducts = filteredProducts.filter(p => 
+                        p.name.toLowerCase().includes(searchTerm)
+                    );
+                }
+
+                // Filter by stock
+                if (stockFilter !== 'all') {
+                    switch (stockFilter) {
+                        case 'instock':
+                            filteredProducts = filteredProducts.filter(p => p.stock > 10);
+                            break;
+                        case 'lowstock':
+                            filteredProducts = filteredProducts.filter(p => p.stock > 0 && p.stock <= 10);
+                            break;
+                        case 'outofstock':
+                            filteredProducts = filteredProducts.filter(p => p.stock === 0);
+                            break;
+                    }
+                }
+
+                tbody.innerHTML = filteredProducts.map(product => `
+                    <tr>
+                        <td>#${product.id}</td>
+                        <td>${product.name}</td>
+                        <td>${this.getCategoryName(product.category)}</td>
+                        <td>${product.price.toFixed(2)} TL</td>
+                        <td>${product.stock}</td>
+                        <td>${this.getStockStatus(product.stock)}</td>
+                        <td>
+                            <button class="btn btn-small btn-warning" onclick="productManager.editProduct(${product.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-small btn-danger" onclick="productManager.deleteProduct(${product.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            getCategoryName(category) {
+                const names = {
+                    'ekmek': 'Ekmek',
+                    'simit': 'Simit',
+                    'pasta': 'Pasta'
+                };
+                return names[category] || category;
+            }
+
+            getStockStatus(stock) {
+                if (stock === 0) {
+                    return '<span style="color: #dc3545; font-weight: bold;">Stokta Yok</span>';
+                } else if (stock <= 10) {
+                    return '<span style="color: #ffc107; font-weight: bold;">Düşük Stok</span>';
+                } else {
+                    return '<span style="color: #28a745; font-weight: bold;">Stokta Var</span>';
+                }
+            }
+
+            showProductModal(product = null) {
+                const modal = document.getElementById('productModal');
+                const modalTitle = document.getElementById('modalTitle');
+                const form = document.getElementById('productForm');
+
+                this.editingProduct = product;
+
+                if (product) {
+                    modalTitle.textContent = 'Ürün Düzenle';
+                    document.getElementById('productName').value = product.name;
+                    document.getElementById('productCategory').value = product.category;
+                    document.getElementById('productPrice').value = product.price;
+                    document.getElementById('productStock').value = product.stock;
+                    document.getElementById('productDescription').value = product.description || '';
+                } else {
+                    modalTitle.textContent = 'Yeni Ürün Ekle';
+                    form.reset();
+                }
+
+                modal.style.display = 'block';
+            }
+
+            saveProduct() {
+                const form = document.getElementById('productForm');
+                const formData = new FormData(form);
+
+                const productData = {
+                    name: formData.get('name'),
+                    category: formData.get('category'),
+                    price: parseFloat(formData.get('price')),
+                    stock: parseInt(formData.get('stock')),
+                    description: formData.get('description')
+                };
+
+                if (this.editingProduct) {
+                    // Update existing product
+                    const index = this.products.findIndex(p => p.id === this.editingProduct.id);
+                    if (index !== -1) {
+                        this.products[index] = { ...this.editingProduct, ...productData };
+                    }
+                } else {
+                    // Add new product
+                    productData.id = Date.now();
+                    this.products.push(productData);
+                }
+
+                this.saveProducts();
+                this.renderProducts();
+                document.getElementById('productModal').style.display = 'none';
+
+                // Show notification
+                this.showNotification(
+                    this.editingProduct ? 'Ürün başarıyla güncellendi!' : 'Yeni ürün başarıyla eklendi!',
+                    'success'
+                );
+            }
+
+            editProduct(id) {
+                const product = this.products.find(p => p.id === id);
+                if (product) {
+                    this.showProductModal(product);
+                }
+            }
+
+            deleteProduct(id) {
+                if (confirm('Bu ürünü silmek istediğinizden emin misiniz?')) {
+                    this.products = this.products.filter(p => p.id !== id);
+                    this.saveProducts();
+                    this.renderProducts();
+                    this.showNotification('Ürün başarıyla silindi!', 'success');
+                }
+            }
+
+            showNotification(message, type = 'info') {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 2rem;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 600;
+                    z-index: 10000;
+                    animation: slideIn 0.3s ease;
+                `;
+                
+                switch (type) {
+                    case 'success':
+                        notification.style.backgroundColor = '#28a745';
+                        break;
+                    case 'error':
+                        notification.style.backgroundColor = '#dc3545';
+                        break;
+                    default:
+                        notification.style.backgroundColor = '#17a2b8';
+                }
+                
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 3000);
+            }
+        }
+
+        // Initialize product manager
+        let productManager;
+        document.addEventListener('DOMContentLoaded', () => {
+            productManager = new ProductManager();
+        });
+    </script>
+</body>
+</html>

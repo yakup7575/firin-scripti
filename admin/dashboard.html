@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Fırın Pastane</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="admin-panel">
+    <header class="admin-header">
+        <nav class="admin-nav">
+            <div class="nav-logo">
+                <i class="fas fa-bread-slice"></i>
+                <span>Fırın Pastane Admin</span>
+            </div>
+            <div class="admin-nav-right">
+                <button id="sidebarToggle" class="btn btn-outline">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <span class="admin-user">Admin User</span>
+                <button id="logoutBtn" class="btn btn-outline">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <nav>
+                <ul>
+                    <li>
+                        <a href="dashboard.html" class="active">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="urunler.html">
+                            <i class="fas fa-boxes"></i>
+                            Ürün Yönetimi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="siparisler.html">
+                            <i class="fas fa-shopping-cart"></i>
+                            Sipariş Yönetimi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="musteriler.html">
+                            <i class="fas fa-users"></i>
+                            Müşteri Yönetimi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="raporlar.html">
+                            <i class="fas fa-chart-bar"></i>
+                            Raporlar
+                        </a>
+                    </li>
+                    <li>
+                        <hr style="border-color: var(--border-light); margin: 1rem 0;">
+                    </li>
+                    <li>
+                        <a href="../index.html">
+                            <i class="fas fa-home"></i>
+                            Ana Siteye Dön
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="admin-content">
+            <div class="breadcrumb">
+                <span class="breadcrumb-item">Admin</span>
+                <span class="breadcrumb-item">Dashboard</span>
+            </div>
+
+            <div class="dashboard-header">
+                <h1>Hoş Geldiniz, Admin!</h1>
+                <p>Fırın pastane yönetim paneline hoş geldiniz. Bugünün özeti:</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-boxes" style="color: var(--secondary-gold);"></i>
+                    </div>
+                    <div class="stat-number" id="total-products">0</div>
+                    <div class="stat-label">Toplam Ürün</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-cart" style="color: var(--accent-orange);"></i>
+                    </div>
+                    <div class="stat-number" id="total-orders">0</div>
+                    <div class="stat-label">Toplam Sipariş</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-lira-sign" style="color: var(--primary-brown);"></i>
+                    </div>
+                    <div class="stat-number" id="total-revenue">0 TL</div>
+                    <div class="stat-label">Toplam Gelir</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i>
+                    </div>
+                    <div class="stat-number" id="low-stock">0</div>
+                    <div class="stat-label">Düşük Stok</div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Hızlı İşlemler</h2>
+                </div>
+                <div class="quick-actions" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <a href="urunler.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Yeni Ürün Ekle
+                    </a>
+                    <a href="siparisler.html" class="btn btn-warning">
+                        <i class="fas fa-eye"></i>
+                        Siparişleri Görüntüle
+                    </a>
+                    <a href="musteriler.html" class="btn btn-success">
+                        <i class="fas fa-users"></i>
+                        Müşteri Listesi
+                    </a>
+                    <a href="raporlar.html" class="btn btn-outline">
+                        <i class="fas fa-chart-line"></i>
+                        Raporları İncele
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Son Siparişler</h2>
+                </div>
+                <div id="recent-orders">
+                    <p>Yükleniyor...</p>
+                </div>
+            </div>
+
+            <!-- Low Stock Alert -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Düşük Stok Uyarıları</h2>
+                </div>
+                <div id="low-stock-items">
+                    <p>Yükleniyor...</p>
+                </div>
+            </div>
+
+            <!-- Today's Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Bugünün Özeti</h2>
+                </div>
+                <div class="today-summary">
+                    <div class="summary-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                        <div class="summary-item">
+                            <h4>Günlük Satış</h4>
+                            <p class="summary-value" id="daily-sales">0 TL</p>
+                        </div>
+                        <div class="summary-item">
+                            <h4>Günlük Sipariş</h4>
+                            <p class="summary-value" id="daily-orders">0</p>
+                        </div>
+                        <div class="summary-item">
+                            <h4>En Çok Satan</h4>
+                            <p class="summary-value" id="best-seller">-</p>
+                        </div>
+                        <div class="summary-item">
+                            <h4>Aktif Müşteri</h4>
+                            <p class="summary-value" id="active-customers">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Dashboard specific functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load dashboard data
+            loadDashboardStats();
+            
+            // Update every 30 seconds
+            setInterval(loadDashboardStats, 30000);
+        });
+
+        function loadDashboardStats() {
+            const data = JSON.parse(localStorage.getItem('firinData'));
+            if (!data) return;
+
+            // Calculate today's stats
+            const today = new Date().toDateString();
+            const todayOrders = data.orders.filter(order => 
+                new Date(order.date).toDateString() === today
+            );
+            
+            const dailySales = todayOrders.reduce((sum, order) => sum + (order.total || 0), 0);
+            const dailyOrderCount = todayOrders.length;
+            
+            // Calculate best seller
+            const productCounts = {};
+            todayOrders.forEach(order => {
+                if (order.items) {
+                    order.items.forEach(item => {
+                        productCounts[item.name] = (productCounts[item.name] || 0) + item.quantity;
+                    });
+                }
+            });
+            
+            const bestSeller = Object.keys(productCounts).length > 0 
+                ? Object.keys(productCounts).reduce((a, b) => productCounts[a] > productCounts[b] ? a : b)
+                : '-';
+
+            // Update elements
+            const dailySalesEl = document.getElementById('daily-sales');
+            const dailyOrdersEl = document.getElementById('daily-orders');
+            const bestSellerEl = document.getElementById('best-seller');
+            const activeCustomersEl = document.getElementById('active-customers');
+
+            if (dailySalesEl) dailySalesEl.textContent = `${dailySales.toFixed(2)} TL`;
+            if (dailyOrdersEl) dailyOrdersEl.textContent = dailyOrderCount;
+            if (bestSellerEl) bestSellerEl.textContent = bestSeller;
+            if (activeCustomersEl) activeCustomersEl.textContent = data.customers.length;
+        }
+    </script>
+</body>
+</html>

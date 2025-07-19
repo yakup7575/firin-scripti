@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fırın Pastane - Taze Ekmek, Simit ve Pasta</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <i class="fas fa-bread-slice"></i>
+                    <span>Fırın Pastane</span>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link active">Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#ekmek" class="nav-link">Ekmek</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#simit" class="nav-link">Simit</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#pasta" class="nav-link">Pasta</a>
+                    </li>
+                    <li class="nav-item admin-nav" style="display: none;">
+                        <a href="admin/dashboard.html" class="nav-link">
+                            <i class="fas fa-cog"></i> Admin
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button id="loginBtn" class="btn btn-outline">Giriş</button>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Taze Fırın Ürünleri</h1>
+                <p>Her gün taze pişirilen ekmek, simit ve pastalarımızla sofranıza lezzet katıyoruz</p>
+                <button class="btn btn-primary">Ürünlerimizi Keşfedin</button>
+            </div>
+            <div class="hero-image">
+                <i class="fas fa-birthday-cake"></i>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="categories" id="categories">
+            <div class="container">
+                <h2>Ürün Kategorilerimiz</h2>
+                <div class="category-grid">
+                    <div class="category-card" data-category="ekmek">
+                        <div class="category-icon">
+                            <i class="fas fa-bread-slice"></i>
+                        </div>
+                        <h3>Ekmek</h3>
+                        <p>Taze pişmiş, çeşitli ekmek türleri</p>
+                        <div class="products-container" id="ekmek-products"></div>
+                    </div>
+
+                    <div class="category-card" data-category="simit">
+                        <div class="category-icon">
+                            <i class="fas fa-circle-notch"></i>
+                        </div>
+                        <h3>Simit</h3>
+                        <p>Geleneksel ve modern simit çeşitleri</p>
+                        <div class="products-container" id="simit-products"></div>
+                    </div>
+
+                    <div class="category-card" data-category="pasta">
+                        <div class="category-icon">
+                            <i class="fas fa-birthday-cake"></i>
+                        </div>
+                        <h3>Pasta</h3>
+                        <p>Özel günleriniz için lezzetli pastalar</p>
+                        <div class="products-container" id="pasta-products"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="container">
+                <h2>Neden Bizi Seçmelisiniz?</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <i class="fas fa-clock"></i>
+                        <h3>Her Gün Taze</h3>
+                        <p>Ürünlerimiz her gün taze olarak hazırlanır</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-heart"></i>
+                        <h3>Doğal Malzemeler</h3>
+                        <p>Sadece doğal ve kaliteli malzemeler kullanırız</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-truck"></i>
+                        <h3>Hızlı Teslimat</h3>
+                        <p>Siparişlerinizi hızla kapınıza getiriyoruz</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Fırın Pastane</h3>
+                    <p>Lezzet ve kalitede uzman</p>
+                </div>
+                <div class="footer-section">
+                    <h4>İletişim</h4>
+                    <p>Tel: (0212) 123 45 67</p>
+                    <p>Email: info@firinpastane.com</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Adres</h4>
+                    <p>İstanbul, Türkiye</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Giriş Yap</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Kullanıcı Adı:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Şifre:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Giriş Yap</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
