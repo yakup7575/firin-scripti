@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sipariş Yönetimi - Fırın Pastane Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-dashboard">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-bread-slice"></i> Fırın Pastane</h2>
+                <p>Admin Paneli</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-item">
+                    <a href="dashboard.html" class="nav-link-admin">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="urunler.html" class="nav-link-admin">
+                        <i class="fas fa-box"></i>
+                        <span>Ürün Yönetimi</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="siparisler.html" class="nav-link-admin active">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Siparişler</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link-admin">
+                        <i class="fas fa-users"></i>
+                        <span>Müşteriler</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link-admin">
+                        <i class="fas fa-envelope"></i>
+                        <span>Mesajlar</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link-admin">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Raporlar</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link-admin">
+                        <i class="fas fa-cog"></i>
+                        <span>Ayarlar</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <h4 id="admin-username">Admin</h4>
+                        <p>Yönetici</p>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Sipariş Yönetimi</h1>
+                </div>
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="btn btn-outline" onclick="exportOrders()">
+                            <i class="fas fa-download"></i> Dışa Aktar
+                        </button>
+                        <button class="btn btn-primary" onclick="refreshOrders()">
+                            <i class="fas fa-sync-alt"></i> Yenile
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Orders Content -->
+            <div class="admin-content">
+                <!-- Order Statistics -->
+                <div class="order-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pending-count">0</h3>
+                            <p>Bekleyen Siparişler</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon processing">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="processing-count">0</h3>
+                            <p>İşleniyor</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon completed">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="completed-count">0</h3>
+                            <p>Tamamlanan</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon total">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-revenue">₺0</h3>
+                            <p>Toplam Ciro</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Filters -->
+                <div class="order-filters">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Durum:</label>
+                            <select id="status-filter" onchange="filterOrders()">
+                                <option value="all">Tüm Durumlar</option>
+                                <option value="pending">Bekleyen</option>
+                                <option value="processing">İşleniyor</option>
+                                <option value="completed">Tamamlanan</option>
+                                <option value="cancelled">İptal</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Tip:</label>
+                            <select id="type-filter" onchange="filterOrders()">
+                                <option value="all">Tüm Tipler</option>
+                                <option value="cake">Pasta Siparişi</option>
+                                <option value="bread">Ekmek</option>
+                                <option value="simit">Simit</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Tarih:</label>
+                            <input type="date" id="date-filter" onchange="filterOrders()">
+                        </div>
+                        <div class="filter-group">
+                            <input type="text" id="search-filter" placeholder="Müşteri ara..." onkeyup="filterOrders()">
+                        </div>
+                        <button class="btn btn-outline" onclick="clearOrderFilters()">
+                            <i class="fas fa-times"></i> Temizle
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="orders-table-container">
+                    <table class="data-table" id="orders-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="select-all" onchange="toggleSelectAll()">
+                                </th>
+                                <th onclick="sortOrders('id')">
+                                    Sipariş No <i class="fas fa-sort"></i>
+                                </th>
+                                <th onclick="sortOrders('customer')">
+                                    Müşteri <i class="fas fa-sort"></i>
+                                </th>
+                                <th onclick="sortOrders('type')">
+                                    Tip <i class="fas fa-sort"></i>
+                                </th>
+                                <th onclick="sortOrders('total')">
+                                    Tutar <i class="fas fa-sort"></i>
+                                </th>
+                                <th onclick="sortOrders('date')">
+                                    Tarih <i class="fas fa-sort"></i>
+                                </th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body">
+                            <!-- Orders will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Bulk Actions -->
+                <div class="bulk-actions" id="bulk-actions" style="display: none;">
+                    <div class="bulk-info">
+                        <span id="selected-count">0</span> sipariş seçildi
+                    </div>
+                    <div class="bulk-buttons">
+                        <button class="btn btn-outline" onclick="bulkUpdateStatus('processing')">
+                            <i class="fas fa-cog"></i> İşleme Al
+                        </button>
+                        <button class="btn btn-primary" onclick="bulkUpdateStatus('completed')">
+                            <i class="fas fa-check"></i> Tamamla
+                        </button>
+                        <button class="btn btn-danger" onclick="bulkUpdateStatus('cancelled')">
+                            <i class="fas fa-times"></i> İptal Et
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="pagination">
+                    <!-- Pagination will be generated dynamically -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/admin.js"></script>
+    <script>
+        let allOrders = [];
+        let filteredOrders = [];
+        let currentPage = 1;
+        let ordersPerPage = 20;
+        let selectedOrders = new Set();
+        let sortColumn = 'date';
+        let sortDirection = 'desc';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrders();
+            updateOrderStats();
+        });
+
+        function loadOrders() {
+            allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+            
+            // Add sample orders if none exist
+            if (allOrders.length === 0) {
+                createSampleOrders();
+            }
+            
+            filteredOrders = [...allOrders];
+            sortOrders(sortColumn, false);
+            displayOrders();
+            updateOrderStats();
+        }
+
+        function createSampleOrders() {
+            const sampleOrders = [
+                {
+                    id: Date.now() + 1,
+                    type: 'cake',
+                    customerInfo: { name: 'Ahmet Yılmaz', phone: '0532 123 4567', email: 'ahmet@email.com' },
+                    cakeDetails: { category: 'birthday', size: 'medium', flavor: 'chocolate' },
+                    totalPrice: 250,
+                    date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+                    status: 'pending',
+                    deliveryDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString()
+                },
+                {
+                    id: Date.now() + 2,
+                    type: 'bread',
+                    items: [
+                        { name: 'Beyaz Ekmek', quantity: 5, price: 3.50 },
+                        { name: 'Tam Buğday Ekmeği', quantity: 2, price: 4.00 }
+                    ],
+                    total: 25.50,
+                    date: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+                    status: 'completed'
+                },
+                {
+                    id: Date.now() + 3,
+                    type: 'simit',
+                    items: [
+                        { name: 'Klasik Simit', quantity: 10, price: 2.50 },
+                        { name: 'Susamlı Simit', quantity: 5, price: 3.00 }
+                    ],
+                    total: 40,
+                    date: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+                    status: 'processing'
+                }
+            ];
+
+            allOrders = sampleOrders;
+            localStorage.setItem('orders', JSON.stringify(allOrders));
+        }
+
+        function displayOrders() {
+            const tableBody = document.getElementById('orders-table-body');
+            const startIndex = (currentPage - 1) * ordersPerPage;
+            const endIndex = startIndex + ordersPerPage;
+            const ordersToShow = filteredOrders.slice(startIndex, endIndex);
+
+            if (ordersToShow.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 3rem;">
+                            <i class="fas fa-shopping-cart fa-3x" style="color: var(--light-brown); margin-bottom: 1rem;"></i>
+                            <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">Sipariş Bulunamadı</h3>
+                            <p style="color: var(--text-light);">Aradığınız kriterlere uygun sipariş bulunmuyor.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = ordersToShow.map(order => {
+                const customerName = order.customerInfo?.name || getCustomerFromItems(order);
+                const orderTotal = order.total || order.totalPrice || 0;
+                const orderDate = new Date(order.date).toLocaleDateString('tr-TR');
+                const statusBadge = getStatusBadge(order.status || 'pending');
+                const typeDisplay = getOrderTypeDisplay(order.type);
+
+                return `
+                    <tr class="order-row ${selectedOrders.has(order.id) ? 'selected' : ''}" data-order-id="${order.id}">
+                        <td>
+                            <input type="checkbox" class="order-select" data-order-id="${order.id}" 
+                                   ${selectedOrders.has(order.id) ? 'checked' : ''} onchange="toggleOrderSelect(${order.id})">
+                        </td>
+                        <td><strong>#${order.id}</strong></td>
+                        <td>
+                            <div class="customer-info">
+                                <strong>${customerName}</strong>
+                                ${order.customerInfo?.phone ? `<br><small>${order.customerInfo.phone}</small>` : ''}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="order-type ${order.type}">${typeDisplay}</span>
+                        </td>
+                        <td>
+                            <strong class="order-amount">₺${orderTotal.toFixed(2)}</strong>
+                        </td>
+                        <td>${orderDate}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-outline btn-small" onclick="viewOrderDetails(${order.id})" title="Detaylar">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-primary btn-small" onclick="quickStatusUpdate(${order.id})" title="Durum Güncelle">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger btn-small" onclick="deleteOrder(${order.id})" title="Sil">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            updatePagination();
+        }
+
+        function getCustomerFromItems(order) {
+            if (order.items && order.items.length > 0) {
+                return 'Anonim Müşteri';
+            }
+            return 'Bilinmeyen Müşteri';
+        }
+
+        function updateOrderStats() {
+            const pendingCount = allOrders.filter(o => (o.status || 'pending') === 'pending').length;
+            const processingCount = allOrders.filter(o => o.status === 'processing').length;
+            const completedCount = allOrders.filter(o => o.status === 'completed').length;
+            const totalRevenue = allOrders
+                .filter(o => o.status === 'completed')
+                .reduce((sum, o) => sum + (o.total || o.totalPrice || 0), 0);
+
+            document.getElementById('pending-count').textContent = pendingCount;
+            document.getElementById('processing-count').textContent = processingCount;
+            document.getElementById('completed-count').textContent = completedCount;
+            document.getElementById('total-revenue').textContent = `₺${totalRevenue.toFixed(2)}`;
+        }
+
+        function filterOrders() {
+            const statusFilter = document.getElementById('status-filter').value;
+            const typeFilter = document.getElementById('type-filter').value;
+            const dateFilter = document.getElementById('date-filter').value;
+            const searchFilter = document.getElementById('search-filter').value.toLowerCase();
+
+            filteredOrders = allOrders.filter(order => {
+                const statusMatch = statusFilter === 'all' || (order.status || 'pending') === statusFilter;
+                const typeMatch = typeFilter === 'all' || order.type === typeFilter;
+                
+                let dateMatch = true;
+                if (dateFilter) {
+                    const orderDate = new Date(order.date).toDateString();
+                    const filterDate = new Date(dateFilter).toDateString();
+                    dateMatch = orderDate === filterDate;
+                }
+
+                let searchMatch = true;
+                if (searchFilter) {
+                    const customerName = (order.customerInfo?.name || '').toLowerCase();
+                    const phone = (order.customerInfo?.phone || '').toLowerCase();
+                    searchMatch = customerName.includes(searchFilter) || phone.includes(searchFilter);
+                }
+
+                return statusMatch && typeMatch && dateMatch && searchMatch;
+            });
+
+            currentPage = 1;
+            displayOrders();
+        }
+
+        function clearOrderFilters() {
+            document.getElementById('status-filter').value = 'all';
+            document.getElementById('type-filter').value = 'all';
+            document.getElementById('date-filter').value = '';
+            document.getElementById('search-filter').value = '';
+            filteredOrders = [...allOrders];
+            currentPage = 1;
+            displayOrders();
+        }
+
+        function sortOrders(column, toggle = true) {
+            if (toggle && sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                if (toggle) sortDirection = 'desc';
+            }
+
+            filteredOrders.sort((a, b) => {
+                let aValue, bValue;
+
+                switch (column) {
+                    case 'id':
+                        aValue = a.id;
+                        bValue = b.id;
+                        break;
+                    case 'customer':
+                        aValue = a.customerInfo?.name || '';
+                        bValue = b.customerInfo?.name || '';
+                        break;
+                    case 'type':
+                        aValue = a.type || '';
+                        bValue = b.type || '';
+                        break;
+                    case 'total':
+                        aValue = a.total || a.totalPrice || 0;
+                        bValue = b.total || b.totalPrice || 0;
+                        break;
+                    case 'date':
+                        aValue = new Date(a.date);
+                        bValue = new Date(b.date);
+                        break;
+                    default:
+                        return 0;
+                }
+
+                if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+                if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            displayOrders();
+        }
+
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('select-all');
+            const orderSelects = document.querySelectorAll('.order-select');
+            
+            if (selectAll.checked) {
+                selectedOrders.clear();
+                filteredOrders.forEach(order => selectedOrders.add(order.id));
+            } else {
+                selectedOrders.clear();
+            }
+
+            orderSelects.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+
+            updateBulkActions();
+        }
+
+        function toggleOrderSelect(orderId) {
+            if (selectedOrders.has(orderId)) {
+                selectedOrders.delete(orderId);
+            } else {
+                selectedOrders.add(orderId);
+            }
+
+            const selectAll = document.getElementById('select-all');
+            const totalVisible = document.querySelectorAll('.order-select').length;
+            selectAll.checked = selectedOrders.size === totalVisible && totalVisible > 0;
+
+            updateBulkActions();
+        }
+
+        function updateBulkActions() {
+            const bulkActions = document.getElementById('bulk-actions');
+            const selectedCount = document.getElementById('selected-count');
+            
+            selectedCount.textContent = selectedOrders.size;
+            bulkActions.style.display = selectedOrders.size > 0 ? 'flex' : 'none';
+        }
+
+        function bulkUpdateStatus(newStatus) {
+            if (selectedOrders.size === 0) return;
+
+            const statusNames = {
+                'pending': 'Bekleyen',
+                'processing': 'İşleniyor',
+                'completed': 'Tamamlandı',
+                'cancelled': 'İptal'
+            };
+
+            if (confirm(`Seçili ${selectedOrders.size} siparişin durumunu "${statusNames[newStatus]}" olarak güncellemek istediğinizden emin misiniz?`)) {
+                selectedOrders.forEach(orderId => {
+                    const orderIndex = allOrders.findIndex(o => o.id === orderId);
+                    if (orderIndex !== -1) {
+                        allOrders[orderIndex].status = newStatus;
+                    }
+                });
+
+                localStorage.setItem('orders', JSON.stringify(allOrders));
+                selectedOrders.clear();
+                document.getElementById('select-all').checked = false;
+                
+                loadOrders();
+                showSuccessMessage(`${selectedOrders.size} sipariş durumu güncellendi!`);
+            }
+        }
+
+        function quickStatusUpdate(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const currentStatus = order.status || 'pending';
+            const nextStatus = getNextStatus(currentStatus);
+            
+            if (nextStatus) {
+                order.status = nextStatus;
+                localStorage.setItem('orders', JSON.stringify(allOrders));
+                loadOrders();
+                showSuccessMessage('Sipariş durumu güncellendi!');
+            }
+        }
+
+        function getNextStatus(currentStatus) {
+            const statusFlow = {
+                'pending': 'processing',
+                'processing': 'completed',
+                'completed': null,
+                'cancelled': null
+            };
+            return statusFlow[currentStatus];
+        }
+
+        function deleteOrder(orderId) {
+            if (confirm('Bu siparişi silmek istediğinizden emin misiniz?')) {
+                const orderIndex = allOrders.findIndex(o => o.id === orderId);
+                if (orderIndex !== -1) {
+                    allOrders.splice(orderIndex, 1);
+                    localStorage.setItem('orders', JSON.stringify(allOrders));
+                    loadOrders();
+                    showSuccessMessage('Sipariş silindi!');
+                }
+            }
+        }
+
+        function viewOrderDetails(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (order) {
+                // Reuse the order details modal from admin.js
+                showOrderDetails(order);
+            }
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+            const pagination = document.getElementById('pagination');
+            
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '';
+            
+            // Previous button
+            if (currentPage > 1) {
+                paginationHTML += `<button onclick="changePage(${currentPage - 1})" class="page-btn">«</button>`;
+            }
+
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<button class="page-btn active">${i}</button>`;
+                } else if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 2) {
+                    paginationHTML += `<button onclick="changePage(${i})" class="page-btn">${i}</button>`;
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    paginationHTML += `<span class="page-dots">...</span>`;
+                }
+            }
+
+            // Next button
+            if (currentPage < totalPages) {
+                paginationHTML += `<button onclick="changePage(${currentPage + 1})" class="page-btn">»</button>`;
+            }
+
+            pagination.innerHTML = paginationHTML;
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            displayOrders();
+        }
+
+        function refreshOrders() {
+            loadOrders();
+            showSuccessMessage('Siparişler yenilendi!');
+        }
+
+        function exportOrders() {
+            const dataStr = JSON.stringify(filteredOrders, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `siparisler_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            showSuccessMessage('Siparişler başarıyla dışa aktarıldı!');
+        }
+    </script>
+
+    <style>
+        .order-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .stat-icon.pending { background: #ffc107; }
+        .stat-icon.processing { background: #17a2b8; }
+        .stat-icon.completed { background: #28a745; }
+        .stat-icon.total { background: var(--primary-color); }
+
+        .stat-info h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .stat-info p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .order-filters {
+            background: var(--cream-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 0.8rem;
+            border: 2px solid var(--light-brown);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            min-width: 150px;
+        }
+
+        .orders-table-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .data-table th {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+
+        .data-table th:hover {
+            background: var(--light-brown);
+        }
+
+        .data-table th i {
+            margin-left: 0.5rem;
+            opacity: 0.5;
+        }
+
+        .order-row.selected {
+            background: #e3f2fd;
+        }
+
+        .customer-info strong {
+            color: var(--primary-color);
+        }
+
+        .customer-info small {
+            color: var(--text-light);
+        }
+
+        .order-type {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .order-type.cake {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .order-type.bread {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .order-type.simit {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        .order-amount {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .bulk-actions {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .bulk-info {
+            font-weight: 500;
+        }
+
+        .bulk-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .bulk-buttons .btn {
+            border-color: white;
+            color: white;
+        }
+
+        .bulk-buttons .btn:hover {
+            background: white;
+        }
+
+        .bulk-buttons .btn-outline:hover {
+            color: var(--primary-color);
+        }
+
+        .bulk-buttons .btn-primary:hover {
+            color: var(--primary-color);
+        }
+
+        .bulk-buttons .btn-danger:hover {
+            color: #dc3545;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--light-brown);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover,
+        .page-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .page-dots {
+            padding: 0.8rem 0.5rem;
+            color: var(--text-light);
+        }
+
+        @media (max-width: 768px) {
+            .order-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                width: 100%;
+            }
+
+            .bulk-actions {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.2rem;
+            }
+
+            .orders-table-container {
+                overflow-x: auto;
+            }
+
+            .data-table {
+                min-width: 800px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .order-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+            }
+
+            .pagination {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</body>
+</html>

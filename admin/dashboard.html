@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Fırın Pastane</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-dashboard">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-bread-slice"></i> Fırın Pastane</h2>
+                <p>Admin Paneli</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-item">
+                    <a href="dashboard.html" class="nav-link-admin active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="urunler.html" class="nav-link-admin">
+                        <i class="fas fa-box"></i>
+                        <span>Ürün Yönetimi</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="siparisler.html" class="nav-link-admin">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Siparişler</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link-admin">
+                        <i class="fas fa-users"></i>
+                        <span>Müşteriler</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link-admin">
+                        <i class="fas fa-envelope"></i>
+                        <span>Mesajlar</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link-admin">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Raporlar</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link-admin">
+                        <i class="fas fa-cog"></i>
+                        <span>Ayarlar</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <h4 id="admin-username">Admin</h4>
+                        <p>Yönetici</p>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="btn btn-outline" onclick="refreshData()">
+                            <i class="fas fa-sync-alt"></i> Yenile
+                        </button>
+                        <button class="btn btn-primary" onclick="showQuickActions()">
+                            <i class="fas fa-plus"></i> Hızlı İşlem
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="admin-content">
+                <!-- Statistics Cards -->
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Günlük Satış</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                        </div>
+                        <div class="card-value" id="daily-sales">₺2,850</div>
+                        <div class="card-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +12.5% önceki güne göre
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Günlük Sipariş</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                        </div>
+                        <div class="card-value" id="daily-orders">47</div>
+                        <div class="card-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +8 yeni sipariş
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Toplam Ürün</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-box"></i>
+                            </div>
+                        </div>
+                        <div class="card-value" id="total-products">245</div>
+                        <div class="card-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            5 yeni ürün eklendi
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Bekleyen Siparişler</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div class="card-value" id="pending-orders">12</div>
+                        <div class="card-change negative">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Acil olan: 3
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders Table -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Son Siparişler</h2>
+                        <a href="siparisler.html" class="btn btn-outline">Tümünü Gör</a>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Sipariş No</th>
+                                    <th>Müşteri</th>
+                                    <th>Ürün</th>
+                                    <th>Tutar</th>
+                                    <th>Tarih</th>
+                                    <th>Durum</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-orders">
+                                <!-- Orders will be loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-bread-slice"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>En Çok Satan</h4>
+                                <p>Beyaz Ekmek</p>
+                                <span>156 adet</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-birthday-cake"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Pasta Siparişleri</h4>
+                                <p>Bu Hafta</p>
+                                <span>23 adet</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Müşteri Memnuniyeti</h4>
+                                <p>Ortalama Puan</p>
+                                <span>4.8/5</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Aylık Büyüme</h4>
+                                <p>Geçen Aya Göre</p>
+                                <span>+18.2%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Low Stock Alerts -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Stok Uyarıları</h2>
+                        <button class="btn btn-outline" onclick="checkAllStock()">
+                            <i class="fas fa-sync"></i> Tümünü Kontrol Et
+                        </button>
+                    </div>
+                    
+                    <div class="alert-list" id="stock-alerts">
+                        <!-- Stock alerts will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Quick Actions Modal -->
+    <div id="quick-actions-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Hızlı İşlemler</h3>
+                <button class="modal-close" onclick="closeQuickActions()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="quick-actions-grid">
+                    <button class="quick-action-btn" onclick="addProduct()">
+                        <i class="fas fa-plus"></i>
+                        <span>Ürün Ekle</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="viewOrders()">
+                        <i class="fas fa-list"></i>
+                        <span>Siparişleri Gör</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="updatePrices()">
+                        <i class="fas fa-tags"></i>
+                        <span>Fiyat Güncelle</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="generateReport()">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Rapor Oluştur</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/admin.js"></script>
+
+    <style>
+        /* Dashboard specific styles */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .quick-stats {
+            margin: 3rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            background: var(--gradient);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .stat-info h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--accent-color);
+        }
+
+        .stat-info p {
+            margin: 0 0 0.3rem 0;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .stat-info span {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .alert-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .stock-alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .alert-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .alert-icon {
+            color: #856404;
+            font-size: 1.5rem;
+        }
+
+        .alert-text h4 {
+            margin: 0 0 0.3rem 0;
+            color: #856404;
+        }
+
+        .alert-text p {
+            margin: 0;
+            color: #6c5600;
+            font-size: 0.9rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-left h1 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 5px;
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--cream-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .quick-action-btn {
+            background: var(--cream-color);
+            border: 2px solid var(--light-brown);
+            border-radius: 15px;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .quick-action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .quick-action-btn i {
+            font-size: 2rem;
+        }
+
+        .quick-action-btn span {
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+
+            .admin-main {
+                margin-left: 0;
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .quick-actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Giriş - Fırın Pastane</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="admin-body">
+    <div class="admin-login-container">
+        <div class="login-form-wrapper">
+            <div class="login-header">
+                <div class="logo">
+                    <i class="fas fa-bread-slice"></i>
+                    <h2>Fırın Pastane</h2>
+                </div>
+                <h3>Admin Paneli</h3>
+                <p>Yönetim paneline erişim için giriş yapın</p>
+            </div>
+
+            <form id="admin-login-form" class="login-form">
+                <div class="form-group">
+                    <label for="username">Kullanıcı Adı</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" name="username" required 
+                               placeholder="Kullanıcı adınızı girin">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Şifre</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" required 
+                               placeholder="Şifrenizi girin">
+                        <button type="button" class="toggle-password" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="password-toggle-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember-me" name="rememberMe">
+                        <span class="checkmark"></span>
+                        Beni Hatırla
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">
+                    <i class="fas fa-sign-in-alt"></i> Giriş Yap
+                </button>
+
+                <div class="login-links">
+                    <a href="#" onclick="showForgotPassword()">Şifremi Unuttum</a>
+                    <span>|</span>
+                    <a href="../index.html">Ana Sayfaya Dön</a>
+                </div>
+            </form>
+
+            <!-- Forgot Password Form -->
+            <form id="forgot-password-form" class="login-form hidden">
+                <div class="form-header">
+                    <h3>Şifre Sıfırlama</h3>
+                    <p>E-posta adresinizi girin, size şifre sıfırlama linki gönderelim</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="reset-email">E-posta</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="reset-email" name="resetEmail" required 
+                               placeholder="E-posta adresinizi girin">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">
+                    <i class="fas fa-paper-plane"></i> Sıfırlama Linki Gönder
+                </button>
+
+                <div class="login-links">
+                    <a href="#" onclick="showLoginForm()">Giriş Formuna Dön</a>
+                </div>
+            </form>
+
+            <!-- Demo Credentials -->
+            <div class="demo-credentials">
+                <h4><i class="fas fa-info-circle"></i> Demo Giriş Bilgileri</h4>
+                <div class="demo-info">
+                    <p><strong>Kullanıcı Adı:</strong> admin</p>
+                    <p><strong>Şifre:</strong> 123456</p>
+                    <button class="btn btn-outline btn-small" onclick="fillDemoCredentials()">
+                        <i class="fas fa-copy"></i> Demo Bilgileri Kullan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="login-sidebar">
+            <div class="sidebar-content">
+                <h3>Yönetim Paneli Özellikleri</h3>
+                <ul class="feature-list">
+                    <li>
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Satış İstatistikleri</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-box"></i>
+                        <span>Ürün Yönetimi</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Sipariş Takibi</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-users"></i>
+                        <span>Müşteri Yönetimi</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-cog"></i>
+                        <span>Sistem Ayarları</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <span>Mesaj Yönetimi</span>
+                    </li>
+                </ul>
+
+                <div class="security-info">
+                    <h4><i class="fas fa-shield-alt"></i> Güvenlik</h4>
+                    <p>Tüm verileriniz güvenli şekilde saklanır ve şifrelenir.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+        <p>Giriş yapılıyor...</p>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Admin login functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAdminLogin();
+        });
+
+        function initializeAdminLogin() {
+            // Check if already logged in
+            if (isLoggedIn()) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            // Form submission
+            const loginForm = document.getElementById('admin-login-form');
+            const forgotForm = document.getElementById('forgot-password-form');
+
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+
+            if (forgotForm) {
+                forgotForm.addEventListener('submit', handleForgotPassword);
+            }
+
+            // Check for saved credentials
+            loadSavedCredentials();
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
+
+            // Show loading
+            showLoading();
+
+            // Simulate login process
+            setTimeout(() => {
+                if (validateCredentials(username, password)) {
+                    // Save login session
+                    saveSession(username, rememberMe);
+                    
+                    // Save credentials if remember me is checked
+                    if (rememberMe) {
+                        saveCredentials(username);
+                    } else {
+                        clearSavedCredentials();
+                    }
+
+                    hideLoading();
+                    showSuccessMessage('Giriş başarılı! Yönlendiriliyorsunuz...');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    hideLoading();
+                    showErrorMessage('Kullanıcı adı veya şifre hatalı!');
+                }
+            }, 2000);
+        }
+
+        function validateCredentials(username, password) {
+            // Demo credentials
+            const validCredentials = [
+                { username: 'admin', password: '123456' },
+                { username: 'manager', password: 'manager123' },
+                { username: 'pastane', password: 'pastane2024' }
+            ];
+
+            return validCredentials.some(cred => 
+                cred.username === username && cred.password === password
+            );
+        }
+
+        function saveSession(username, rememberMe) {
+            const sessionData = {
+                username: username,
+                loginTime: new Date().toISOString(),
+                expiryTime: rememberMe ? 
+                    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() : // 30 days
+                    new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString() // 8 hours
+            };
+
+            if (rememberMe) {
+                localStorage.setItem('adminSession', JSON.stringify(sessionData));
+            } else {
+                sessionStorage.setItem('adminSession', JSON.stringify(sessionData));
+            }
+        }
+
+        function isLoggedIn() {
+            const session = localStorage.getItem('adminSession') || sessionStorage.getItem('adminSession');
+            
+            if (!session) return false;
+
+            try {
+                const sessionData = JSON.parse(session);
+                const now = new Date();
+                const expiry = new Date(sessionData.expiryTime);
+                
+                return now < expiry;
+            } catch {
+                return false;
+            }
+        }
+
+        function saveCredentials(username) {
+            localStorage.setItem('rememberedUsername', username);
+        }
+
+        function loadSavedCredentials() {
+            const rememberedUsername = localStorage.getItem('rememberedUsername');
+            if (rememberedUsername) {
+                document.getElementById('username').value = rememberedUsername;
+                document.getElementById('remember-me').checked = true;
+            }
+        }
+
+        function clearSavedCredentials() {
+            localStorage.removeItem('rememberedUsername');
+        }
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('password-toggle-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.className = 'fas fa-eye';
+            }
+        }
+
+        function showForgotPassword() {
+            document.getElementById('admin-login-form').classList.add('hidden');
+            document.getElementById('forgot-password-form').classList.remove('hidden');
+        }
+
+        function showLoginForm() {
+            document.getElementById('forgot-password-form').classList.add('hidden');
+            document.getElementById('admin-login-form').classList.remove('hidden');
+        }
+
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('reset-email').value;
+            
+            showLoading();
+            
+            setTimeout(() => {
+                hideLoading();
+                showSuccessMessage('Şifre sıfırlama linki e-posta adresinize gönderildi!');
+                showLoginForm();
+            }, 2000);
+        }
+
+        function fillDemoCredentials() {
+            document.getElementById('username').value = 'admin';
+            document.getElementById('password').value = '123456';
+            showSuccessMessage('Demo bilgileri dolduruldu!');
+        }
+
+        function showLoading() {
+            document.getElementById('loading-overlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+
+        function showSuccessMessage(message) {
+            // Simple alert for now - could be enhanced with a proper notification system
+            const successDiv = document.createElement('div');
+            successDiv.className = 'alert alert-success';
+            successDiv.textContent = message;
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+
+        function showErrorMessage(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-error';
+            errorDiv.textContent = message;
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #dc3545;
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(errorDiv);
+            
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 3000);
+        }
+    </script>
+
+    <style>
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</body>
+</html>

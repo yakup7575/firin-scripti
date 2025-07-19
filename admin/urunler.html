@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ürün Yönetimi - Fırın Pastane Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-dashboard">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-bread-slice"></i> Fırın Pastane</h2>
+                <p>Admin Paneli</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-item">
+                    <a href="dashboard.html" class="nav-link-admin">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="urunler.html" class="nav-link-admin active">
+                        <i class="fas fa-box"></i>
+                        <span>Ürün Yönetimi</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="siparisler.html" class="nav-link-admin">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Siparişler</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link-admin">
+                        <i class="fas fa-users"></i>
+                        <span>Müşteriler</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link-admin">
+                        <i class="fas fa-envelope"></i>
+                        <span>Mesajlar</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link-admin">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Raporlar</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link-admin">
+                        <i class="fas fa-cog"></i>
+                        <span>Ayarlar</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <h4 id="admin-username">Admin</h4>
+                        <p>Yönetici</p>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Ürün Yönetimi</h1>
+                </div>
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="btn btn-outline" onclick="exportProducts()">
+                            <i class="fas fa-download"></i> Dışa Aktar
+                        </button>
+                        <button class="btn btn-primary" onclick="showAddProductModal()">
+                            <i class="fas fa-plus"></i> Yeni Ürün
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Products Content -->
+            <div class="admin-content">
+                <!-- Product Categories -->
+                <div class="category-tabs">
+                    <button class="tab-btn active" onclick="switchCategory('all')" data-category="all">
+                        <i class="fas fa-th"></i> Tüm Ürünler
+                    </button>
+                    <button class="tab-btn" onclick="switchCategory('ekmekler')" data-category="ekmekler">
+                        <i class="fas fa-bread-slice"></i> Ekmekler
+                    </button>
+                    <button class="tab-btn" onclick="switchCategory('simitler')" data-category="simitler">
+                        <i class="fas fa-circle-notch"></i> Simitler
+                    </button>
+                    <button class="tab-btn" onclick="switchCategory('pastalar')" data-category="pastalar">
+                        <i class="fas fa-birthday-cake"></i> Pastalar
+                    </button>
+                </div>
+
+                <!-- Product Filters -->
+                <div class="product-filters">
+                    <div class="filter-group">
+                        <input type="text" id="product-search" placeholder="Ürün ara..." onkeyup="filterProducts()">
+                        <button onclick="clearFilters()" class="btn btn-outline">
+                            <i class="fas fa-times"></i> Temizle
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="products-grid" id="products-grid">
+                    <!-- Products will be loaded dynamically -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="product-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Yeni Ürün Ekle</h3>
+                <button class="modal-close" onclick="closeProductModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="product-form">
+                    <input type="hidden" id="product-id" name="productId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="product-name">Ürün Adı *</label>
+                            <input type="text" id="product-name" name="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-category">Kategori *</label>
+                            <select id="product-category" name="productCategory" required>
+                                <option value="">Kategori Seçin</option>
+                                <option value="ekmekler">Ekmekler</option>
+                                <option value="simitler">Simitler</option>
+                                <option value="pastalar">Pastalar</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="product-price">Fiyat (₺) *</label>
+                            <input type="number" id="product-price" name="productPrice" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-stock">Stok</label>
+                            <input type="number" id="product-stock" name="productStock" min="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product-description">Açıklama</label>
+                        <textarea id="product-description" name="productDescription" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="product-active" name="productActive" checked>
+                            <span class="checkmark"></span>
+                            Ürün Aktif
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Kaydet
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="closeProductModal()">
+                            İptal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/admin.js"></script>
+    <script>
+        let currentCategory = 'all';
+        let allProducts = {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            setupProductForm();
+        });
+
+        function loadProducts() {
+            // Load products from localStorage
+            allProducts = JSON.parse(localStorage.getItem('products')) || {
+                ekmekler: [],
+                simitler: [],
+                pastalar: []
+            };
+
+            // Ensure default products exist
+            if (Object.keys(allProducts).length === 0 || 
+                allProducts.ekmekler.length === 0) {
+                createDefaultProducts();
+            }
+
+            displayProducts();
+        }
+
+        function createDefaultProducts() {
+            allProducts = {
+                ekmekler: [
+                    { id: 1, name: 'Beyaz Ekmek', price: 3.50, description: 'Günlük taze beyaz ekmek', stock: 50, active: true },
+                    { id: 2, name: 'Tam Buğday Ekmeği', price: 4.00, description: 'Sağlıklı tam buğday ekmeği', stock: 30, active: true },
+                    { id: 3, name: 'Çavdar Ekmeği', price: 4.50, description: 'Lezzetli çavdar ekmeği', stock: 25, active: true },
+                    { id: 4, name: 'Köy Ekmeği', price: 5.00, description: 'Geleneksel köy ekmeği', stock: 20, active: true }
+                ],
+                simitler: [
+                    { id: 5, name: 'Klasik Simit', price: 2.50, description: 'Geleneksel İstanbul simidi', stock: 100, active: true },
+                    { id: 6, name: 'Susamlı Simit', price: 3.00, description: 'Bol susamlı taze simit', stock: 80, active: true },
+                    { id: 7, name: 'Çörek Otu Simidi', price: 3.50, description: 'Çörek otlu özel simit', stock: 60, active: true },
+                    { id: 8, name: 'Açma', price: 4.00, description: 'Yumuşak ve lezzetli açma', stock: 40, active: true }
+                ],
+                pastalar: [
+                    { id: 9, name: 'Doğum Günü Pastası', price: 150, description: 'Özel doğum günü pastaları', stock: 10, active: true },
+                    { id: 10, name: 'Düğün Pastası', price: 500, description: 'Muhteşem düğün pastaları', stock: 5, active: true },
+                    { id: 11, name: 'Özel Gün Pastası', price: 200, description: 'Özel günler için pastalar', stock: 8, active: true }
+                ]
+            };
+
+            localStorage.setItem('products', JSON.stringify(allProducts));
+        }
+
+        function displayProducts() {
+            const productsGrid = document.getElementById('products-grid');
+            let productsToShow = [];
+
+            if (currentCategory === 'all') {
+                productsToShow = Object.values(allProducts).flat();
+            } else {
+                productsToShow = allProducts[currentCategory] || [];
+            }
+
+            if (productsToShow.length === 0) {
+                productsGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open fa-3x"></i>
+                        <h3>Ürün Bulunamadı</h3>
+                        <p>Bu kategoride henüz ürün bulunmuyor.</p>
+                        <button class="btn btn-primary" onclick="showAddProductModal()">
+                            <i class="fas fa-plus"></i> İlk Ürünü Ekle
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            productsGrid.innerHTML = productsToShow.map(product => `
+                <div class="product-item" data-category="${getCategoryByProductId(product.id)}" data-name="${product.name.toLowerCase()}">
+                    <div class="product-header">
+                        <h4>${product.name}</h4>
+                        <div class="product-actions">
+                            <button class="btn btn-outline btn-small" onclick="editProduct(${product.id})" title="Düzenle">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small" onclick="deleteProduct(${product.id})" title="Sil">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <p class="product-price">₺${product.price.toFixed(2)}</p>
+                        <p class="product-category">${getCategoryDisplayName(getCategoryByProductId(product.id))}</p>
+                        <p class="product-stock ${product.stock < 10 ? 'low-stock' : ''}">
+                            <i class="fas fa-boxes"></i> Stok: ${product.stock || 0}
+                        </p>
+                        <p class="product-status ${product.active ? 'active' : 'inactive'}">
+                            <i class="fas fa-circle"></i> ${product.active ? 'Aktif' : 'Pasif'}
+                        </p>
+                    </div>
+                    <div class="product-description">
+                        <p>${product.description || 'Açıklama yok'}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getCategoryByProductId(productId) {
+            for (const [category, products] of Object.entries(allProducts)) {
+                if (products.find(p => p.id === productId)) {
+                    return category;
+                }
+            }
+            return 'unknown';
+        }
+
+        function getCategoryDisplayName(category) {
+            const names = {
+                'ekmekler': 'Ekmekler',
+                'simitler': 'Simitler',
+                'pastalar': 'Pastalar'
+            };
+            return names[category] || 'Bilinmeyen';
+        }
+
+        function switchCategory(category) {
+            currentCategory = category;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.category === category);
+            });
+
+            displayProducts();
+        }
+
+        function filterProducts() {
+            const searchTerm = document.getElementById('product-search').value.toLowerCase();
+            const productItems = document.querySelectorAll('.product-item');
+
+            productItems.forEach(item => {
+                const productName = item.dataset.name;
+                const matches = productName.includes(searchTerm);
+                item.style.display = matches ? 'block' : 'none';
+            });
+        }
+
+        function clearFilters() {
+            document.getElementById('product-search').value = '';
+            filterProducts();
+        }
+
+        function showAddProductModal() {
+            document.getElementById('modal-title').textContent = 'Yeni Ürün Ekle';
+            document.getElementById('product-form').reset();
+            document.getElementById('product-id').value = '';
+            document.getElementById('product-active').checked = true;
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function editProduct(productId) {
+            const product = findProductById(productId);
+            if (!product) {
+                showErrorMessage('Ürün bulunamadı!');
+                return;
+            }
+
+            document.getElementById('modal-title').textContent = 'Ürün Düzenle';
+            document.getElementById('product-id').value = product.id;
+            document.getElementById('product-name').value = product.name;
+            document.getElementById('product-category').value = getCategoryByProductId(product.id);
+            document.getElementById('product-price').value = product.price;
+            document.getElementById('product-stock').value = product.stock || 0;
+            document.getElementById('product-description').value = product.description || '';
+            document.getElementById('product-active').checked = product.active;
+            
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function deleteProduct(productId) {
+            if (confirm('Bu ürünü silmek istediğinizden emin misiniz?')) {
+                const category = getCategoryByProductId(productId);
+                const productIndex = allProducts[category].findIndex(p => p.id === productId);
+                
+                if (productIndex !== -1) {
+                    allProducts[category].splice(productIndex, 1);
+                    localStorage.setItem('products', JSON.stringify(allProducts));
+                    displayProducts();
+                    showSuccessMessage('Ürün başarıyla silindi!');
+                } else {
+                    showErrorMessage('Ürün bulunamadı!');
+                }
+            }
+        }
+
+        function findProductById(productId) {
+            for (const category of Object.values(allProducts)) {
+                const product = category.find(p => p.id === productId);
+                if (product) return product;
+            }
+            return null;
+        }
+
+        function setupProductForm() {
+            const form = document.getElementById('product-form');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProduct();
+            });
+        }
+
+        function saveProduct() {
+            const formData = new FormData(document.getElementById('product-form'));
+            const productData = {
+                id: parseInt(formData.get('productId')) || generateProductId(),
+                name: formData.get('productName'),
+                price: parseFloat(formData.get('productPrice')),
+                description: formData.get('productDescription'),
+                stock: parseInt(formData.get('productStock')) || 0,
+                active: document.getElementById('product-active').checked
+            };
+
+            const category = formData.get('productCategory');
+            
+            if (!category) {
+                showErrorMessage('Kategori seçmelisiniz!');
+                return;
+            }
+
+            // Check if editing existing product
+            const existingProductIndex = allProducts[category].findIndex(p => p.id === productData.id);
+            
+            if (existingProductIndex !== -1) {
+                // Update existing product
+                allProducts[category][existingProductIndex] = productData;
+                showSuccessMessage('Ürün başarıyla güncellendi!');
+            } else {
+                // Add new product
+                allProducts[category].push(productData);
+                showSuccessMessage('Yeni ürün başarıyla eklendi!');
+            }
+
+            localStorage.setItem('products', JSON.stringify(allProducts));
+            displayProducts();
+            closeProductModal();
+        }
+
+        function generateProductId() {
+            const allIds = Object.values(allProducts).flat().map(p => p.id);
+            return Math.max(...allIds, 0) + 1;
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        function exportProducts() {
+            const dataStr = JSON.stringify(allProducts, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = 'urunler.json';
+            link.click();
+            
+            showSuccessMessage('Ürünler başarıyla dışa aktarıldı!');
+        }
+    </script>
+
+    <style>
+        .category-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid var(--light-brown);
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn:hover,
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .product-filters {
+            background: var(--cream-color);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-group input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--light-brown);
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-item {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .product-header h4 {
+            margin: 0;
+            color: var(--primary-color);
+            flex: 1;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .product-details {
+            margin-bottom: 1rem;
+        }
+
+        .product-details p {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .product-category {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .product-stock {
+            color: var(--text-dark);
+        }
+
+        .product-stock.low-stock {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .product-status {
+            font-size: 0.9rem;
+        }
+
+        .product-status.active {
+            color: #28a745;
+        }
+
+        .product-status.inactive {
+            color: #dc3545;
+        }
+
+        .product-description {
+            border-top: 1px solid var(--cream-color);
+            padding-top: 1rem;
+        }
+
+        .product-description p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            color: var(--light-brown);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .empty-state p {
+            margin-bottom: 2rem;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            border-color: #bd2130;
+        }
+
+        @media (max-width: 768px) {
+            .category-tabs {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .product-actions {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</body>
+</html>
