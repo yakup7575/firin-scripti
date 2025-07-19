@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fırın Pastane - Taze ve Lezzetli Ürünler</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2><i class="fas fa-bread-slice"></i> Fırın Pastane</h2>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link active">Ana Sayfa</a>
+                <a href="ekmekler.html" class="nav-link">Ekmekler</a>
+                <a href="simitler.html" class="nav-link">Simitler</a>
+                <a href="pastalar.html" class="nav-link">Pastalar</a>
+                <a href="iletisim.html" class="nav-link">İletişim</a>
+                <a href="admin/login.html" class="nav-link admin-link">Admin</a>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Taze ve Lezzetli Fırın Ürünleri</h1>
+            <p>Her gün taze pişirilen ekmekler, simitler ve özel pastalarımızla damak zevkinizi keşfedin</p>
+            <div class="hero-buttons">
+                <a href="#products" class="btn btn-primary">Ürünlerimizi Keşfedin</a>
+                <a href="pastalar.html" class="btn btn-secondary">Pasta Siparişi Ver</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="image-placeholder">
+                <i class="fas fa-bread-slice fa-5x"></i>
+                <p>Fırın Görseli</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Ürün ara...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products">
+        <div class="container">
+            <h2 class="section-title">Ürün Kategorilerimiz</h2>
+            
+            <!-- Bread Section -->
+            <div class="product-category">
+                <h3><i class="fas fa-bread-slice"></i> Ekmek Çeşitleri</h3>
+                <div class="product-grid" id="ekmek-grid">
+                    <div class="product-card" data-category="ekmek" data-name="beyaz ekmek">
+                        <div class="product-image">
+                            <i class="fas fa-bread-slice fa-3x"></i>
+                        </div>
+                        <h4>Beyaz Ekmek</h4>
+                        <p class="price">₺3.50</p>
+                        <p class="description">Günlük taze beyaz ekmek</p>
+                    </div>
+                    <div class="product-card" data-category="ekmek" data-name="tam buğday">
+                        <div class="product-image">
+                            <i class="fas fa-bread-slice fa-3x"></i>
+                        </div>
+                        <h4>Tam Buğday Ekmeği</h4>
+                        <p class="price">₺4.00</p>
+                        <p class="description">Sağlıklı tam buğday ekmeği</p>
+                    </div>
+                    <div class="product-card" data-category="ekmek" data-name="çavdar">
+                        <div class="product-image">
+                            <i class="fas fa-bread-slice fa-3x"></i>
+                        </div>
+                        <h4>Çavdar Ekmeği</h4>
+                        <p class="price">₺4.50</p>
+                        <p class="description">Lezzetli çavdar ekmeği</p>
+                    </div>
+                    <div class="product-card" data-category="ekmek" data-name="köy ekmeği">
+                        <div class="product-image">
+                            <i class="fas fa-bread-slice fa-3x"></i>
+                        </div>
+                        <h4>Köy Ekmeği</h4>
+                        <p class="price">₺5.00</p>
+                        <p class="description">Geleneksel köy ekmeği</p>
+                    </div>
+                </div>
+                <div class="category-footer">
+                    <a href="ekmekler.html" class="btn btn-outline">Tüm Ekmekleri Gör</a>
+                </div>
+            </div>
+
+            <!-- Bagels Section -->
+            <div class="product-category">
+                <h3><i class="fas fa-circle-notch"></i> Simitler</h3>
+                <div class="product-grid" id="simit-grid">
+                    <div class="product-card" data-category="simit" data-name="klasik simit">
+                        <div class="product-image">
+                            <i class="fas fa-circle-notch fa-3x"></i>
+                        </div>
+                        <h4>Klasik Simit</h4>
+                        <p class="price">₺2.50</p>
+                        <p class="description">Geleneksel İstanbul simidi</p>
+                    </div>
+                    <div class="product-card" data-category="simit" data-name="susamlı simit">
+                        <div class="product-image">
+                            <i class="fas fa-circle-notch fa-3x"></i>
+                        </div>
+                        <h4>Susamlı Simit</h4>
+                        <p class="price">₺3.00</p>
+                        <p class="description">Bol susamlı taze simit</p>
+                    </div>
+                    <div class="product-card" data-category="simit" data-name="çörek otu">
+                        <div class="product-image">
+                            <i class="fas fa-circle-notch fa-3x"></i>
+                        </div>
+                        <h4>Çörek Otu Simidi</h4>
+                        <p class="price">₺3.50</p>
+                        <p class="description">Çörek otlu özel simit</p>
+                    </div>
+                    <div class="product-card" data-category="simit" data-name="açma">
+                        <div class="product-image">
+                            <i class="fas fa-cookie-bite fa-3x"></i>
+                        </div>
+                        <h4>Açma</h4>
+                        <p class="price">₺4.00</p>
+                        <p class="description">Yumuşak ve lezzetli açma</p>
+                    </div>
+                </div>
+                <div class="category-footer">
+                    <a href="simitler.html" class="btn btn-outline">Tüm Simitleri Gör</a>
+                </div>
+            </div>
+
+            <!-- Cakes Section -->
+            <div class="product-category">
+                <h3><i class="fas fa-birthday-cake"></i> Pasta Siparişi</h3>
+                <div class="product-grid" id="pasta-grid">
+                    <div class="product-card" data-category="pasta" data-name="doğum günü">
+                        <div class="product-image">
+                            <i class="fas fa-birthday-cake fa-3x"></i>
+                        </div>
+                        <h4>Doğum Günü Pastası</h4>
+                        <p class="price">₺150+</p>
+                        <p class="description">Özel doğum günü pastaları</p>
+                    </div>
+                    <div class="product-card" data-category="pasta" data-name="düğün">
+                        <div class="product-image">
+                            <i class="fas fa-wedding-ring fa-3x"></i>
+                        </div>
+                        <h4>Düğün Pastası</h4>
+                        <p class="price">₺500+</p>
+                        <p class="description">Muhteşem düğün pastaları</p>
+                    </div>
+                    <div class="product-card" data-category="pasta" data-name="özel gün">
+                        <div class="product-image">
+                            <i class="fas fa-gift fa-3x"></i>
+                        </div>
+                        <h4>Özel Gün Pastası</h4>
+                        <p class="price">₺200+</p>
+                        <p class="description">Özel günler için pastalar</p>
+                    </div>
+                </div>
+                <div class="category-footer">
+                    <a href="pastalar.html" class="btn btn-primary">Pasta Siparişi Ver</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Info -->
+    <section class="contact-info">
+        <div class="container">
+            <h2 class="section-title">İletişim Bilgileri</h2>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h4>Adres</h4>
+                    <p>Fırın Sokak No:123<br>Pastane Mahallesi, İstanbul</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <h4>Telefon</h4>
+                    <p>+90 212 555 0123</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-clock"></i>
+                    <h4>Çalışma Saatleri</h4>
+                    <p>Pazartesi - Pazar<br>07:00 - 22:00</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <h4>E-posta</h4>
+                    <p>info@firinpastane.com</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-bread-slice"></i> Fırın Pastane</h3>
+                    <p>Taze ve lezzetli fırın ürünleri ile hizmetinizdeyiz.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Hızlı Linkler</h4>
+                    <ul>
+                        <li><a href="index.html">Ana Sayfa</a></li>
+                        <li><a href="ekmekler.html">Ekmekler</a></li>
+                        <li><a href="simitler.html">Simitler</a></li>
+                        <li><a href="pastalar.html">Pastalar</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>İletişim</h4>
+                    <p><i class="fas fa-phone"></i> +90 212 555 0123</p>
+                    <p><i class="fas fa-envelope"></i> info@firinpastane.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Fırın Pastane. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

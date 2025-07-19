@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekmek Çeşitleri - Fırın Pastane</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2><i class="fas fa-bread-slice"></i> Fırın Pastane</h2>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Ana Sayfa</a>
+                <a href="ekmekler.html" class="nav-link active">Ekmekler</a>
+                <a href="simitler.html" class="nav-link">Simitler</a>
+                <a href="pastalar.html" class="nav-link">Pastalar</a>
+                <a href="iletisim.html" class="nav-link">İletişim</a>
+                <a href="admin/login.html" class="nav-link admin-link">Admin</a>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="header-content">
+                <h1><i class="fas fa-bread-slice"></i> Ekmek Çeşitleri</h1>
+                <p>Her gün taze pişirilen, kaliteli ekmek çeşitlerimizi keşfedin</p>
+                <nav class="breadcrumb">
+                    <a href="index.html">Ana Sayfa</a>
+                    <span>/</span>
+                    <span>Ekmekler</span>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <div class="container">
+            <div class="filter-controls">
+                <div class="search-filter">
+                    <input type="text" id="bread-search" placeholder="Ekmek ara...">
+                    <button id="search-bread-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="sort-filter">
+                    <select id="sort-select">
+                        <option value="name">İsme Göre</option>
+                        <option value="price-low">Fiyat (Düşük-Yüksek)</option>
+                        <option value="price-high">Fiyat (Yüksek-Düşük)</option>
+                    </select>
+                </div>
+                <div class="view-toggle">
+                    <button class="view-btn active" data-view="grid"><i class="fas fa-th"></i></button>
+                    <button class="view-btn" data-view="list"><i class="fas fa-list"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Breads Section -->
+    <section class="breads-section">
+        <div class="container">
+            <div class="products-grid" id="breads-grid">
+                
+                <!-- Beyaz Ekmek -->
+                <div class="product-card" data-name="beyaz ekmek" data-price="3.50">
+                    <div class="product-image">
+                        <i class="fas fa-bread-slice fa-4x"></i>
+                        <div class="product-badge">Taze</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Beyaz Ekmek</h3>
+                        <p class="price">₺3.50</p>
+                        <p class="description">Günlük taze pişirilen beyaz ekmek. Yumuşak içi ve çıtır kabuğu ile her öğüne lezzet katar.</p>
+                        <div class="product-details">
+                            <span class="detail-item"><i class="fas fa-weight"></i> 500g</span>
+                            <span class="detail-item"><i class="fas fa-clock"></i> Günlük</span>
+                            <span class="detail-item"><i class="fas fa-leaf"></i> Doğal</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" onclick="addToCart('Beyaz Ekmek', 3.50)">
+                                <i class="fas fa-shopping-cart"></i> Sepete Ekle
+                            </button>
+                            <button class="btn btn-outline" onclick="showProductDetails('Beyaz Ekmek')">
+                                <i class="fas fa-info-circle"></i> Detaylar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tam Buğday Ekmeği -->
+                <div class="product-card" data-name="tam buğday ekmeği" data-price="4.00">
+                    <div class="product-image">
+                        <i class="fas fa-bread-slice fa-4x"></i>
+                        <div class="product-badge healthy">Sağlıklı</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Tam Buğday Ekmeği</h3>
+                        <p class="price">₺4.00</p>
+                        <p class="description">%100 tam buğday unu ile hazırlanan sağlıklı ekmek. Lif açısından zengin ve besleyici.</p>
+                        <div class="product-details">
+                            <span class="detail-item"><i class="fas fa-weight"></i> 500g</span>
+                            <span class="detail-item"><i class="fas fa-clock"></i> Günlük</span>
+                            <span class="detail-item"><i class="fas fa-heart"></i> Sağlıklı</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" onclick="addToCart('Tam Buğday Ekmeği', 4.00)">
+                                <i class="fas fa-shopping-cart"></i> Sepete Ekle
+                            </button>
+                            <button class="btn btn-outline" onclick="showProductDetails('Tam Buğday Ekmeği')">
+                                <i class="fas fa-info-circle"></i> Detaylar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Çavdar Ekmeği -->
+                <div class="product-card" data-name="çavdar ekmeği" data-price="4.50">
+                    <div class="product-image">
+                        <i class="fas fa-bread-slice fa-4x"></i>
+                        <div class="product-badge special">Özel</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Çavdar Ekmeği</h3>
+                        <p class="price">₺4.50</p>
+                        <p class="description">Geleneksel çavdar unu ile hazırlanan lezzetli ekmek. Kendine özgü tadı ve aroması ile.</p>
+                        <div class="product-details">
+                            <span class="detail-item"><i class="fas fa-weight"></i> 450g</span>
+                            <span class="detail-item"><i class="fas fa-clock"></i> Günlük</span>
+                            <span class="detail-item"><i class="fas fa-star"></i> Geleneksel</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" onclick="addToCart('Çavdar Ekmeği', 4.50)">
+                                <i class="fas fa-shopping-cart"></i> Sepete Ekle
+                            </button>
+                            <button class="btn btn-outline" onclick="showProductDetails('Çavdar Ekmeği')">
+                                <i class="fas fa-info-circle"></i> Detaylar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Köy Ekmeği -->
+                <div class="product-card" data-name="köy ekmeği" data-price="5.00">
+                    <div class="product-image">
+                        <i class="fas fa-bread-slice fa-4x"></i>
+                        <div class="product-badge premium">Premium</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Köy Ekmeği</h3>
+                        <p class="price">₺5.00</p>
+                        <p class="description">Geleneksel yöntemlerle hazırlanan köy ekmeği. Maya ile uzun fermentasyon süreci.</p>
+                        <div class="product-details">
+                            <span class="detail-item"><i class="fas fa-weight"></i> 600g</span>
+                            <span class="detail-item"><i class="fas fa-clock"></i> Günlük</span>
+                            <span class="detail-item"><i class="fas fa-home"></i> Ev Yapımı</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" onclick="addToCart('Köy Ekmeği', 5.00)">
+                                <i class="fas fa-shopping-cart"></i> Sepete Ekle
+                            </button>
+                            <button class="btn btn-outline" onclick="showProductDetails('Köy Ekmeği')">
+                                <i class="fas fa-info-circle"></i> Detaylar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kepekli Ekmek -->
+                <div class="product-card" data-name="kepekli ekmek" data-price="4.25">
+                    <div class="product-image">
+                        <i class="fas fa-bread-slice fa-4x"></i>
+                        <div class="product-badge healthy">Sağlıklı</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Kepekli Ekmek</h3>
+                        <p class="price">₺4.25</p>
+                        <p class="description">Kepek ilaveli besleyici ekmek. Sindirimi kolay ve lif açısından zengin.</p>
+                        <div class="product-details">
+                            <span class="detail-item"><i class="fas fa-weight"></i> 500g</span>
+                            <span class="detail-item"><i class="fas fa-clock"></i> Günlük</span>
+                            <span class="detail-item"><i class="fas fa-seedling"></i> Kepekli</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" onclick="addToCart('Kepekli Ekmek', 4.25)">
+                                <i class="fas fa-shopping-cart"></i> Sepete Ekle
+                            </button>
+                            <button class="btn btn-outline" onclick="showProductDetails('Kepekli Ekmek')">
+                                <i class="fas fa-info-circle"></i> Detaylar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Çok Tahıllı Ekmek -->
+                <div class="product-card" data-name="çok tahıllı ekmek" data-price="5.50">
+                    <div class="product-image">
+                        <i class="fas fa-bread-slice fa-4x"></i>
+                        <div class="product-badge premium">Premium</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Çok Tahıllı Ekmek</h3>
+                        <p class="price">₺5.50</p>
+                        <p class="description">Buğday, çavdar, yulaf ve ayçiçeği çekirdeği ile hazırlanan besleyici ekmek.</p>
+                        <div class="product-details">
+                            <span class="detail-item"><i class="fas fa-weight"></i> 500g</span>
+                            <span class="detail-item"><i class="fas fa-clock"></i> Günlük</span>
+                            <span class="detail-item"><i class="fas fa-seedling"></i> Çok Tahıllı</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" onclick="addToCart('Çok Tahıllı Ekmek', 5.50)">
+                                <i class="fas fa-shopping-cart"></i> Sepete Ekle
+                            </button>
+                            <button class="btn btn-outline" onclick="showProductDetails('Çok Tahıllı Ekmek')">
+                                <i class="fas fa-info-circle"></i> Detaylar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Shopping Cart -->
+            <div class="cart-summary" id="cart-summary">
+                <h3><i class="fas fa-shopping-cart"></i> Sepetim</h3>
+                <div class="cart-items" id="cart-items">
+                    <p class="empty-cart">Sepetiniz boş</p>
+                </div>
+                <div class="cart-total">
+                    <strong>Toplam: <span id="cart-total">₺0.00</span></strong>
+                </div>
+                <button class="btn btn-primary btn-full" onclick="proceedToCheckout()" style="display: none;" id="checkout-btn">
+                    <i class="fas fa-credit-card"></i> Siparişi Tamamla
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-bread-slice"></i> Fırın Pastane</h3>
+                    <p>Taze ve lezzetli fırın ürünleri ile hizmetinizdeyiz.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Hızlı Linkler</h4>
+                    <ul>
+                        <li><a href="index.html">Ana Sayfa</a></li>
+                        <li><a href="ekmekler.html">Ekmekler</a></li>
+                        <li><a href="simitler.html">Simitler</a></li>
+                        <li><a href="pastalar.html">Pastalar</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>İletişim</h4>
+                    <p><i class="fas fa-phone"></i> +90 212 555 0123</p>
+                    <p><i class="fas fa-envelope"></i> info@firinpastane.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Fırın Pastane. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Bread page specific functionality
+        let cart = [];
+        let cartTotal = 0;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeBreadPage();
+        });
+
+        function initializeBreadPage() {
+            // Initialize filters
+            document.getElementById('bread-search').addEventListener('input', filterBreads);
+            document.getElementById('sort-select').addEventListener('change', sortBreads);
+            
+            // Initialize view toggle
+            const viewButtons = document.querySelectorAll('.view-btn');
+            viewButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    viewButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    toggleView(this.dataset.view);
+                });
+            });
+
+            loadCartFromStorage();
+            updateCartDisplay();
+        }
+
+        function filterBreads() {
+            const query = document.getElementById('bread-search').value.toLowerCase();
+            const cards = document.querySelectorAll('.product-card');
+            
+            cards.forEach(card => {
+                const name = card.dataset.name.toLowerCase();
+                const description = card.querySelector('.description').textContent.toLowerCase();
+                const matches = name.includes(query) || description.includes(query);
+                card.style.display = matches ? 'block' : 'none';
+            });
+        }
+
+        function sortBreads() {
+            const sortBy = document.getElementById('sort-select').value;
+            const grid = document.getElementById('breads-grid');
+            const cards = Array.from(grid.children);
+            
+            cards.sort((a, b) => {
+                switch(sortBy) {
+                    case 'name':
+                        return a.dataset.name.localeCompare(b.dataset.name);
+                    case 'price-low':
+                        return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+                    case 'price-high':
+                        return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+                    default:
+                        return 0;
+                }
+            });
+            
+            cards.forEach(card => grid.appendChild(card));
+        }
+
+        function toggleView(view) {
+            const grid = document.getElementById('breads-grid');
+            if (view === 'list') {
+                grid.classList.add('list-view');
+            } else {
+                grid.classList.remove('list-view');
+            }
+        }
+
+        function addToCart(name, price) {
+            const existingItem = cart.find(item => item.name === name);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+            updateCartDisplay();
+            saveCartToStorage();
+            showSuccessMessage(`${name} sepete eklendi!`);
+        }
+
+        function removeFromCart(name) {
+            cart = cart.filter(item => item.name !== name);
+            updateCartDisplay();
+            saveCartToStorage();
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotalElement = document.getElementById('cart-total');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="empty-cart">Sepetiniz boş</p>';
+                cartTotal = 0;
+                checkoutBtn.style.display = 'none';
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-quantity">x${item.quantity}</span>
+                        <span class="item-price">₺${(item.price * item.quantity).toFixed(2)}</span>
+                        <button class="remove-item" onclick="removeFromCart('${item.name}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `).join('');
+                
+                cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+                checkoutBtn.style.display = 'block';
+            }
+            
+            cartTotalElement.textContent = `₺${cartTotal.toFixed(2)}`;
+        }
+
+        function saveCartToStorage() {
+            localStorage.setItem('breadCart', JSON.stringify(cart));
+        }
+
+        function loadCartFromStorage() {
+            const savedCart = localStorage.getItem('breadCart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+            }
+        }
+
+        function proceedToCheckout() {
+            if (cart.length === 0) return;
+            
+            const order = {
+                type: 'bread',
+                items: cart,
+                total: cartTotal,
+                date: new Date().toISOString()
+            };
+            
+            // Save order
+            const orderId = window.firinPastane.saveOrder(order);
+            
+            // Clear cart
+            cart = [];
+            localStorage.removeItem('breadCart');
+            updateCartDisplay();
+            
+            showSuccessMessage(`Siparişiniz alındı! Sipariş No: ${orderId}`);
+        }
+
+        function showProductDetails(name) {
+            // Implementation for showing detailed product information
+            const card = document.querySelector(`[data-name="${name.toLowerCase()}"]`);
+            if (card) {
+                const price = card.dataset.price;
+                const description = card.querySelector('.description').textContent;
+                
+                alert(`${name}\nFiyat: ₺${price}\n\n${description}`);
+            }
+        }
+
+        function showSuccessMessage(message) {
+            if (window.firinPastane) {
+                window.firinPastane.showSuccessMessage(message);
+            } else {
+                alert(message);
+            }
+        }
+    </script>
+
+    <style>
+        /* Page Header Styles */
+        .page-header {
+            background: var(--gradient);
+            color: white;
+            padding: 120px 0 60px;
+            text-align: center;
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .breadcrumb {
+            margin-top: 1rem;
+            opacity: 0.8;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .breadcrumb span {
+            margin: 0 0.5rem;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            padding: 2rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .filter-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-filter {
+            display: flex;
+            background: var(--cream-color);
+            border-radius: 25px;
+            padding: 5px;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-filter input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 10px 15px;
+            outline: none;
+        }
+
+        .search-filter button {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .sort-filter select {
+            padding: 10px 15px;
+            border: 2px solid var(--light-brown);
+            border-radius: 10px;
+            background: white;
+            outline: none;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-btn {
+            padding: 10px 15px;
+            border: 2px solid var(--light-brown);
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active,
+        .view-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Products Grid */
+        .breads-section {
+            padding: 3rem 0;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 3rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .products-grid.list-view {
+            grid-template-columns: 1fr;
+        }
+
+        .products-grid.list-view .product-card {
+            display: flex;
+            align-items: center;
+            text-align: left;
+        }
+
+        .products-grid.list-view .product-image {
+            flex-shrink: 0;
+            margin-right: 2rem;
+            margin-bottom: 0;
+        }
+
+        /* Product Cards */
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
+            position: relative;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--accent-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .product-badge.healthy {
+            background: #28a745;
+        }
+
+        .product-badge.special {
+            background: #17a2b8;
+        }
+
+        .product-badge.premium {
+            background: #6f42c1;
+        }
+
+        .product-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .description {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .product-details {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .detail-item {
+            background: var(--cream-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: var(--text-dark);
+        }
+
+        .detail-item i {
+            color: var(--secondary-color);
+            margin-right: 0.3rem;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Cart Summary */
+        .cart-summary {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .cart-summary h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--cream-color);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .item-quantity {
+            color: var(--text-light);
+            margin: 0 0.5rem;
+        }
+
+        .item-price {
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .remove-item {
+            background: #dc3545;
+            border: none;
+            color: white;
+            padding: 0.3rem 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .cart-total {
+            text-align: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: var(--cream-color);
+            border-radius: 10px;
+            font-size: 1.2rem;
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .breads-section {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-filter {
+                max-width: none;
+            }
+
+            .product-actions {
+                flex-direction: column;
+            }
+
+            .products-grid.list-view .product-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .products-grid.list-view .product-image {
+                margin-right: 0;
+                margin-bottom: 1.5rem;
+            }
+        }
+    </style>
+</body>
+</html>
